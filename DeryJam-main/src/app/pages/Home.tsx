@@ -67,7 +67,8 @@ export function Home() {
   ];
 
   return (
-    <div>
+    <div className="bg-[#F7F1E1]">
+
       {/* Hero Section */}
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/80 to-emerald-800/70 z-10" />
@@ -86,13 +87,13 @@ export function Home() {
           <div className="flex gap-4 justify-center flex-wrap">
             <Link
               to="/productos"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-lg transition-colors"
+              className="bg-[#89030F] hover:bg-[#6e020a] text-white px-8 py-3 rounded-lg transition-colors"
             >
               Ver Productos
             </Link>
             <Link
               to="/nosotros"
-              className="bg-white hover:bg-gray-100 text-emerald-900 px-8 py-3 rounded-lg transition-colors"
+              className="bg-[#89030F] hover:bg-[#6e020a] text-white px-8 py-3 rounded-lg transition-colors"
             >
               Conoce Más
             </Link>
@@ -101,7 +102,7 @@ export function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-[#F7F1E1]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
@@ -118,10 +119,10 @@ export function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-16">
+      <section className="py-16 bg-[#F7F1E1]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl mb-4 text-emerald-900">
+            <h2 className="text-3xl md:text-4xl mb-4 text-[#89030F]">
               Productos Destacados
             </h2>
             <p className="text-gray-600 text-lg">
@@ -146,9 +147,9 @@ export function Home() {
                   <h3 className="mb-2">{product.name}</h3>
                   <p className="text-gray-600 text-sm mb-3">{product.description}</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-emerald-600 text-xl">${product.price}</span>
+                    <span className="text-[#89030F] text-xl">${product.price}</span>
                     <button
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded text-sm transition-colors"
+                      className="bg-[#89030F] hover:bg-[#6e020a] text-white px-4 py-2 rounded text-sm transition-colors"
                       onClick={() => handleAddToCart(product)}
                     >
                       Agregar
@@ -162,7 +163,7 @@ export function Home() {
           <div className="text-center mt-12">
             <Link
               to="/productos"
-              className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-lg transition-colors"
+              className="inline-block bg-[#89030F] hover:bg-[#6e020a] text-white px-8 py-3 rounded-lg transition-colors"
             >
               Ver Todos los Productos
             </Link>
@@ -171,11 +172,11 @@ export function Home() {
       </section>
 
       {/* About Preview Section */}
-      <section className="py-16 bg-emerald-50">
+      <section className="py-16 bg-[#F7F1E1]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl mb-6 text-emerald-900">
+              <h2 className="text-3xl md:text-4xl mb-6 text-[#89030F]">
                 Nuestra Historia
               </h2>
               <p className="text-gray-700 mb-4 leading-relaxed">
@@ -189,7 +190,7 @@ export function Home() {
               </p>
               <Link
                 to="/nosotros"
-                className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-lg transition-colors"
+                className="inline-block bg-[#89030F] hover:bg-[#6e020a] text-white px-8 py-3 rounded-lg transition-colors"
               >
                 Conoce Más Sobre Nosotros
               </Link>
@@ -204,6 +205,7 @@ export function Home() {
           </div>
         </div>
       </section>
+
     </div>
   );
 }
