@@ -62,7 +62,7 @@ export function Contact() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-amber-50">
       {/* Hero Section */}
       <section className="bg-emerald-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -193,7 +193,8 @@ export function Contact() {
 
                 <button
                   type="submit"
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg transition-colors"
+                  className="w-full text-white py-3 rounded-lg transition-colors"
+                  style={{ backgroundColor: "#89030F" }}
                 >
                   Enviar Mensaje
                 </button>
