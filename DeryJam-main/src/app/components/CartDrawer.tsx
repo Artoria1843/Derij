@@ -21,7 +21,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         onClick={onClose}
       />
       
-      {/* Fondo beige completo */}
+      {/* Drawer */}
       <div className="fixed right-0 top-0 h-full w-full sm:w-96 bg-[#F7F1E1] shadow-xl z-50 flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
@@ -65,7 +65,11 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   
                   <div className="flex-1 min-w-0">
                     <h3 className="text-sm font-medium mb-1 truncate text-black">{item.name}</h3>
-                    <p className="text-emerald-600 mb-2 font-medium">${item.price}</p>
+                    
+                    {/* Precio unitario en negro */}
+                    <p className="text-black mb-2 font-medium">
+                      ${item.price}
+                    </p>
                     
                     <div className="flex items-center gap-2">
                       <button
@@ -81,9 +85,10 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       >
                         <Plus className="h-3 w-3" />
                       </button>
+                      
                       <button
                         onClick={() => removeFromCart(item.id)}
-                        className="ml-auto p-1 text-red-600 hover:text-red-800 hover:bg-red-50 rounded"
+                        className="ml-auto p-1.5 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -95,16 +100,18 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           )}
         </div>
 
-        {/* Footer - Solo botón rojo + total en negro */}
+        {/* Footer */}
         {items.length > 0 && (
           <div className="border-t border-gray-200 p-4 space-y-4 bg-[#F7F1E1]">
             <div className="flex justify-between items-center">
               <span className="text-lg font-medium text-black">Total:</span>
+              {/* Total en negro y más grande */}
               <span className="text-2xl font-bold text-black">
                 ${getTotalPrice().toFixed(2)}
               </span>
             </div>
             
+            {/* Botón rojo */}
             <Link
               to="/checkout"
               onClick={onClose}
@@ -112,8 +119,6 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             >
               Proceder al Pago
             </Link>
-            
-            {/* Botón "Continuar Comprando" eliminado */}
           </div>
         )}
       </div>
