@@ -64,10 +64,10 @@ export function Contact() {
   return (
     <div className="min-h-screen bg-amber-50">
       {/* Hero Section */}
-      <section className="bg-emerald-900 text-white py-16">
+      <section className="text-white py-16" style={{ backgroundColor: "#89030F" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl mb-4">Contacto</h1>
-          <p className="text-xl text-emerald-100">
+          <p className="text-xl text-red-100">
             Estamos aquí para ayudarte. Contáctanos y con gusto te atenderemos
           </p>
         </div>
@@ -79,7 +79,8 @@ export function Contact() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {contactInfo.map((info, index) => (
               <div key={index} className="bg-white p-6 rounded-lg shadow-md">
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full mb-4">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full mb-4"
+                style={{ backgroundColor: "#f8d7da", color: "#89030F" }}>
                   <info.icon className="h-6 w-6" />
                 </div>
                 <h3 className="mb-2">{info.title}</h3>
@@ -98,10 +99,11 @@ export function Contact() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div className="bg-white p-8 rounded-lg shadow-md">
-              <h2 className="text-3xl mb-6 text-emerald-900">Envíanos un Mensaje</h2>
+              <h2 className="text-3xl mb-6" style={{ color: "#89030F" }}>Envíanos un Mensaje</h2>
               
               {submitted && (
-                <div className="mb-6 p-4 bg-emerald-100 text-emerald-800 rounded-lg">
+                <div className="mb-6 p-4 rounded-lg"
+                style={{ backgroundColor: "#f8d7da", color: "#89030F" }}>
                   ¡Gracias por tu mensaje! Te contactaremos pronto.
                 </div>
               )}
@@ -118,7 +120,7 @@ export function Contact() {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-800"
                     placeholder="Tu nombre completo"
                   />
                 </div>
@@ -134,7 +136,7 @@ export function Contact() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-800"
                     placeholder="tu@email.com"
                   />
                 </div>
@@ -149,7 +151,7 @@ export function Contact() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-800"
                     placeholder="(55) 1234 5678"
                   />
                 </div>
@@ -164,7 +166,7 @@ export function Contact() {
                     required
                     value={formData.subject}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-800"
                   >
                     <option value="">Selecciona un asunto</option>
                     <option value="consulta">Consulta General</option>
@@ -186,7 +188,7 @@ export function Contact() {
                     rows={6}
                     value={formData.message}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-800 resize-none"
                     placeholder="Escribe tu mensaje aquí..."
                   />
                 </div>
@@ -204,7 +206,7 @@ export function Contact() {
             {/* Map or Additional Info */}
             <div className="space-y-6">
               <div className="bg-white p-8 rounded-lg shadow-md">
-                <h2 className="text-3xl mb-6 text-emerald-900">Encuéntranos</h2>
+                <h2 className="text-3xl mb-6 text-red-800">Encuéntranos</h2>
                 <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden mb-6">
                   {/* Map placeholder - you would integrate a real map service here */}
                   <div className="w-full h-full flex items-center justify-center bg-emerald-50">
@@ -225,15 +227,16 @@ export function Contact() {
                 </p>
               </div>
 
-              <div className="bg-emerald-50 p-8 rounded-lg border-2 border-emerald-200">
-                <h3 className="text-xl mb-4 text-emerald-900">
+              <div className="p-8 rounded-lg border-2"
+                style={{ backgroundColor: "#fff5f5", borderColor: "#89030F" }}>
+                <h3 className="text-xl mb-4 text-red-800">
                   ¿Preguntas Frecuentes?
                 </h3>
                 <p className="text-gray-700 mb-4">
                   Antes de contactarnos, quizás encuentres la respuesta a tu pregunta 
                   en nuestras preguntas frecuentes.
                 </p>
-                <button className="text-emerald-600 hover:text-emerald-700 font-semibold">
+                <button className="font-semibold" style={{ color: "#89030F" }}>
                   Ver Preguntas Frecuentes →
                 </button>
               </div>
