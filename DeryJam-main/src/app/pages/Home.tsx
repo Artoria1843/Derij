@@ -73,7 +73,7 @@ export function Home() {
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/80 to-emerald-800/70 z-10" />
         <ImageWithFallback
-          src="https://images.unsplash.com/photo-1752401984784-74bb3b095745?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpc2FuJTIwZm9vZCUyMG1hcmtldCUyMHN0YWxsfGVufDF8fHx8MTc3NDI3NzcwMXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+          src="https://vidanayarit.com.mx/wp-content/uploads/2025/08/18_jamaica.png"
           alt="Hero background"
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -197,7 +197,7 @@ export function Home() {
             </div>
             <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
               <ImageWithFallback
-                src="https://images.unsplash.com/photo-1764323064965-9182443d27a9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXJtJTIwd29ya2VycyUyMGhhcnZlc3R8ZW58MXx8fHwxNzc0Mjc3NzAyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                src="/src/assets/logo.jpeg"
                 alt="Nuestra historia"
                 className="w-full h-full object-cover"
               />
