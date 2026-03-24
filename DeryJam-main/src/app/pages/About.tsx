@@ -24,20 +24,12 @@ export function About() {
   ];
 
   return (
-    <div>
-      {/* Hero Section */}
-      <section className="relative h-[400px] flex items-center justify-center overflow-hidden">
-        <div className="absol ute inset-0 bg-gradient-to-r from-emerald-900/90 to-emerald-800/80 z-10" />
-        <ImageWithFallback
-          src="https://images.unsplash.com/photo-1744659747310-39564f92c25b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuYXR1cmFsJTIwb3JnYW5pYyUyMGluZ3JlZGllbnRzJTIwaGVyYnN8ZW58MXx8fHwxNzc0MTg2MTY0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-          alt="Sobre nosotros"
-          className="absolute inset-0 w-full h-full object-cover"
     <div style={{ backgroundColor: "#F7F1E1", paddingBottom: "80px" }}>
       
       {/* BANNER */}
       <div className="relative w-full h-[250px] md:h-[350px] overflow-hidden mb-16">
         <img
-          src="/src/assets/JAMAICA.jpeg"  //  NOMBRE IMAGEN RUTA
+          src="/src/assets/JAMAICA.jpeg"
           alt="Banner Jamaica"
           className="w-full h-full object-cover"
         />
@@ -55,13 +47,13 @@ export function About() {
         </div>
       </div>
 
-      {/*  HISTORIA */}
+      {/* HISTORIA */}
       <div className="max-w-6xl mx-auto my-20 px-6">
         <div className="grid md:grid-cols-2 gap-16 items-center">
           
           <div className="rounded-lg overflow-hidden shadow-md">
             <ImageWithFallback
-              src="/src/assets/BANNER.jpg" // IMAGEN NOMMBRE
+              src="/src/assets/BANNER.jpg"
               alt="Historia de la Jamaica"
               className="w-full h-full object-cover"
             />
