@@ -23,7 +23,7 @@ export function Products() {
       name: "Miel de Flores Silvestres",
       category: "honey",
       price: 180,
-      image: "https://images.unsplash.com/photo-1566216867955-5b2e8c77e45f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmdhbmljJTIwbmF0dXJhbCUyMHByb2R1Y3RzJTIwaG9uZXl8ZW58MXx8fHwxNzc0Mjc3Njk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsHIHgisPUJPcftmEMd_utQC70aTUKj4zQzw&s",
       description: "Miel 100% pura de flores silvestres, cosechada artesanalmente"
     },
     {
