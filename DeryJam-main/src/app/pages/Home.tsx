@@ -26,7 +26,7 @@ export function Home() {
       id: 3,
       name: "Hierbas Secas",
       price: 95,
-      image: "https://images.unsplash.com/photo-1758657996518-e67bd328854e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmdhbmljJTIwZHJpZWQlMjBoZXJicyUyMHNwaWNlc3xlbnwxfHx8fDE3NzQyNzc3MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsHIHgisPUJPcftmEMd_utQC70aTUKj4zQzw&s",
       description: "Hierbas orgánicas deshidratadas"
     },
     {
