@@ -52,7 +52,7 @@ export function Contact() {
     {
       icon: Mail,
       title: "Email",
-      content: "info@deryjam.com\nventas@deryjam.com"
+      content: "deryjam2025@gmail.com"
     },
     {
       icon: Clock,
