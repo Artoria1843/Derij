@@ -10,111 +10,86 @@ export function Products() {
   const { addToCart } = useCart();
 
   const categories = [
-    { id: "all", name: "Todos" },
-    { id: "honey", name: "Mieles" },
-    { id: "jams", name: "Mermeladas" },
-    { id: "herbs", name: "Hierbas" },
-    { id: "preserves", name: "Conservas" }
-  ];
+  { id: "all", name: "Todos" },
+  { id: "chorizo", name: "Chorizo de Jamaica" },
+  { id: "pulpa", name: "Pulpa de Jamaica" },
+  { id: "mezcal", name: "Mezcal de Jamaica" },
+  { id: "mermelada", name: "Mermelada de Jamaica" }
+];
 
-  const products = [
-    {
-      id: 1,
-      name: "Miel de Flores Silvestres",
-      category: "honey",
-      price: 180,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsHIHgisPUJPcftmEMd_utQC70aTUKj4zQzw&s",
-      description: "Miel 100% pura de flores silvestres, cosechada artesanalmente"
-    },
-    {
-      id: 2,
-      name: "Miel Premium de Abeja",
-      category: "honey",
-      price: 220,
-      image: "https://images.unsplash.com/photo-1719871766551-b9ecf87eee51?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuYXR1cmFsJTIwaG9uZXklMjBib3R0bGUlMjBqYXJ8ZW58MXx8fHwxNzc0Mjc3NzAyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      description: "Presentación especial de miel premium con propiedades únicas"
-    },
-    {
-      id: 3,
-      name: "Miel de Azahar",
-      category: "honey",
-      price: 195,
-      image: "https://images.unsplash.com/photo-1566216867955-5b2e8c77e45f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmdhbmljJTIwbmF0dXJhbCUyMHByb2R1Y3RzJTIwaG9uZXl8ZW58MXx8fHwxNzc0Mjc3Njk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      description: "Delicada miel con aroma floral de azahar"
-    },
-    {
-      id: 4,
-      name: "Mermelada de Fresa",
-      category: "jams",
-      price: 120,
-      image: "https://images.unsplash.com/photo-1757489345191-07ea9f17a0a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmdhbmljJTIwamFtJTIwcHJlc2VydmVzJTIwamFyc3xlbnwxfHx8fDE3NzQyNzc3MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      description: "Mermelada casera de fresas frescas sin conservadores"
-    },
-    {
-      id: 5,
-      name: "Mermelada de Zarzamora",
-      category: "jams",
-      price: 130,
-      image: "https://images.unsplash.com/photo-1757489345191-07ea9f17a0a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmdhbmljJTIwamFtJTIwcHJlc2VydmVzJTIwamFyc3xlbnwxfHx8fDE3NzQyNzc3MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      description: "Mermelada artesanal de zarzamoras silvestres"
-    },
-    {
-      id: 6,
-      name: "Mermelada de Naranja",
-      category: "jams",
-      price: 115,
-      image: "https://images.unsplash.com/photo-1757489345191-07ea9f17a0a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmdhbmljJTIwamFtJTIwcHJlc2VydmVzJTIwamFyc3xlbnwxfHx8fDE3NzQyNzc3MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      description: "Mermelada con trozos de naranja natural"
-    },
-    {
-      id: 7,
-      name: "Hierbas Aromáticas Mix",
-      category: "herbs",
-      price: 95,
-      image: "https://images.unsplash.com/photo-1758657996518-e67bd328854e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmdhbmljJTIwZHJpZWQlMjBoZXJicyUyMHNwaWNlc3xlbnwxfHx8fDE3NzQyNzc3MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      description: "Mezcla de hierbas orgánicas deshidratadas para cocinar"
-    },
-    {
-      id: 8,
-      name: "Orégano Seco",
-      category: "herbs",
-      price: 75,
-      image: "https://images.unsplash.com/photo-1758657996518-e67bd328854e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmdhbmljJTIwZHJpZWQlMjBoZXJicyUyMHNwaWNlc3xlbnwxfHx8fDE3NzQyNzc3MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      description: "Orégano 100% natural cosechado a mano"
-    },
-    {
-      id: 9,
-      name: "Hierbas Medicinales",
-      category: "herbs",
-      price: 110,
-      image: "https://images.unsplash.com/photo-1744659747310-39564f92c25b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuYXR1cmFsJTIwb3JnYW5pYyUyMGluZ3JlZGllbnRzJTIwaGVyYnN8ZW58MXx8fHwxNzc0MTg2MTY0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      description: "Selección de hierbas con propiedades medicinales"
-    },
-    {
-      id: 10,
-      name: "Conserva de Vegetales",
-      category: "preserves",
-      price: 140,
-      image: "https://images.unsplash.com/photo-1757489345191-07ea9f17a0a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmdhbmljJTIwamFtJTIwcHJlc2VydmVzJTIwamFyc3xlbnwxfHx8fDE3NzQyNzc3MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      description: "Vegetales en conserva artesanal"
-    },
-    {
-      id: 11,
-      name: "Salsa Picante Artesanal",
-      category: "preserves",
-      price: 105,
-      image: "https://images.unsplash.com/photo-1757489345191-07ea9f17a0a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmdhbmljJTIwamFtJTIwcHJlc2VydmVzJTIwamFyc3xlbnwxfHx8fDE3NzQyNzc3MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      description: "Salsa picante hecha con chiles naturales"
-    },
-    {
-      id: 12,
-      name: "Chutney de Mango",
-      category: "preserves",
-      price: 125,
-      image: "https://images.unsplash.com/photo-1757489345191-07ea9f17a0a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmdhbmljJTIwamFtJTIwcHJlc2VydmVzJTIwamFyc3xlbnwxfHx8fDE3NzQyNzc3MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      description: "Chutney dulce y especiado de mango fresco"
-    }
-  ];
+ const products = [
+  // 🔴 CHORIZO
+  {
+    id: 1,
+    name: "Chorizo de Jamaica 1kg",
+    category: "chorizo",
+    price: 130,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCUD5lle-cmClHV2Ogmxnshk-dz831-6ejFw&s",
+    description: "Chorizo artesanal de jamaica 1kg"
+  },
+  {
+    id: 2,
+    name: "Chorizo de Jamaica 500g",
+    category: "chorizo",
+    price: 70,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCUD5lle-cmClHV2Ogmxnshk-dz831-6ejFw&s",
+    description: "Chorizo artesanal de jamaica 500g"
+  },
+  {
+    id: 3,
+    name: "Chorizo de Jamaica 250g",
+    category: "chorizo",
+    price: 35,
+    image: "https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480_1_5x/img/recipe/ras/Assets/b66f872a179dea7b8d6f717b99077bf9/Derivates/5649f5b2588a2556b3e4517d13ed7a17404c5e6e.jpg",
+    description: "Chorizo artesanal de jamaica 250g"
+  },
+
+  // 🟣 MERMELADA
+  {
+    id: 4,
+    name: "Mermelada de Jamaica 250g",
+    category: "mermelada",
+    price: 30,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-McLWRKPM4S1fuSwKkOhV-AHhUsZjbh4lwQ&s",
+    description: "Mermelada natural de jamaica 250g"
+  },
+  {
+    id: 5,
+    name: "Mermelada de Jamaica 500g",
+    category: "mermelada",
+    price: 60,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-McLWRKPM4S1fuSwKkOhV-AHhUsZjbh4lwQ&s",
+    description: "Mermelada natural de jamaica 500g"
+  },
+
+  // 🟢 PULPA
+  {
+    id: 6,
+    name: "Pulpa de Jamaica 250g",
+    category: "pulpa",
+    price: 25,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeyPbiU3Gvuc4qz2SfhzQy5rWP_BBZ5QhQ4g&s",
+    description: "Pulpa natural de jamaica"
+  },
+
+  // 🟡 MEZCAL
+  {
+    id: 7,
+    name: "Mezcal de Jamaica 1L",
+    category: "mezcal",
+    price: 150,
+    image: "https://i.pinimg.com/736x/bd/5e/58/bd5e58ce688acfe5708c4e9b946452f0.jpg",
+    description: "Mezcal artesanal con infusión de jamaica 1L"
+  },
+  {
+    id: 8,
+    name: "Mezcal de Jamaica 500ml",
+    category: "mezcal",
+    price: 80,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSieChcefT8jG_koPMdYmECMKMrchWteyIwbA&s",
+    description: "Mezcal artesanal con infusión de jamaica 500ml"
+  }
+];
 
   const handleAddToCart = (product: typeof products[0]) => {
     addToCart(product);
@@ -128,16 +103,32 @@ export function Products() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#F7F1E1]">{/*  coor de fondo */}
       {/* Hero Section */}
-      <section className="bg-emerald-900 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl mb-4">Nuestros Productos</h1>
-          <p className="text-xl text-emerald-100">
-            Descubre nuestra amplia selección de productos naturales y artesanales
-          </p>
-        </div>
-      </section>
+      <section className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
+
+  {/* Imagen */}
+  <ImageWithFallback
+    src="/src/assets/JAMAICA.jpeg"
+    alt="Productos Jamaica"
+    className="absolute inset-0 w-full h-full object-cover"
+  />
+
+  {/* Capa oscura (overlay) */}
+  <div
+    className="absolute inset-0"
+    style={{ backgroundColor: "rgba(158, 0, 5, 0.14)" }}
+  ></div>
+
+  {/* Texto */}
+  <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
+    <h1 className="text-4xl md:text-5xl mb-4">Nuestros Productos</h1>
+    <p className="text-xl">
+      Descubre nuestra amplia selección de productos de jamaica
+    </p>
+  </div>
+
+</section>
 
       {/* Filters Section */}
       <section className="bg-white shadow-sm sticky top-16 z-40">
@@ -211,10 +202,10 @@ export function Products() {
                         <span className="text-emerald-600 text-2xl">
                           ${product.price}
                         </span>
-                        <button
-                          className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded transition-colors"
-                          onClick={() => handleAddToCart(product)}
-                        >
+                        <button 
+                          className="bg-[#89030F] hover:bg-emerald-700 text-white px-4 py-2 rounded transition-colors"
+                          onClick={() => handleAddToCart(product)} 
+                        >{/*  configiuracion de los botons */}
                           Agregar
                         </button>
                       </div>
