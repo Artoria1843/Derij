@@ -12,6 +12,7 @@ export function Checkout() {
 
   const [currentStep, setCurrentStep] = useState<CheckoutStep>("cart");
   const [orderNumber, setOrderNumber] = useState("");
+  const [orderTotal, setOrderTotal] = useState(0); // ← Nuevo estado para guardar el total
 
   const [shippingData, setShippingData] = useState({
     fullName: "",
@@ -32,6 +33,7 @@ export function Checkout() {
     paymentMethod: "transfer"
   });
 
+  // Calculamos el total solo mientras estamos en los pasos anteriores a la confirmación
   const subtotal = getTotalPrice();
   const shipping = 0;
   const tax = 0;
@@ -55,12 +57,14 @@ export function Checkout() {
     setCurrentStep("payment");
   };
 
-  // ←←← CAMBIO PRINCIPAL: Se limpia el carrito al confirmar el pedido
   const handlePaymentSubmit = () => {
     const orderNum = "DRJ" + Date.now().toString().slice(-8);
+    
+    // Guardamos el total ANTES de limpiar el carrito
+    setOrderTotal(total);
     setOrderNumber(orderNum);
     
-    clearCart();                    // ← Aquí se vacía el carrito inmediatamente
+    clearCart();                    // Limpiamos el carrito
     
     setCurrentStep("confirmation");
   };
@@ -217,7 +221,6 @@ export function Checkout() {
                 </div>
 
                 <div className="space-y-4">
-                  {/* ... (todos los campos de envío se mantienen igual) */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-gray-700 mb-2">Nombre Completo *</label>
@@ -510,7 +513,7 @@ export function Checkout() {
                 <div className="border-t pt-4 space-y-3">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Total Pagado:</span>
-                    <span className="text-lg text-black">${total.toFixed(2)}</span>
+                    <span className="text-lg text-black">${orderTotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Método de Pago:</span>
