@@ -8,6 +8,7 @@ export function Home() {
   const { addToCart } = useCart();
 
   const featuredProducts = [
+
   {
     id: 1,
     name: "Mezcal de Jamaica 1L",
@@ -20,7 +21,7 @@ export function Home() {
     id: 2,
     name: "Chorizo de Jamaica 1k",
     category: "chorizo",
-    price: 70,
+    price: 140,
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsHIHgisPUJPcftmEMd_utQC70aTUKj4zQzw&s",
     description: "Chorizo artesanal de jamaica 1k"
   },
@@ -34,15 +35,15 @@ export function Home() {
   },
   {
     id: 4,
-    name: "Mezcal de Jamaica",
+    name: "Mermelada de Jamaica 500g",
     category: "jams",
     price: 150,
-    image: "https://i5.walmartimages.com/asr/3dda6a32-7d1d-46b9-a297-4cd12c99dc9c.c015af67181a9b4748cd810580b2e092.jpeg",
-    description: "Mezcal artesanal infusionado con flores de Jamaica, 1 litro"
+    image: "https://besarteconmezcal.com/wp-content/uploads/2024/11/MERMELADA-DE-JAMAICA.webp",
+    description: "Mermelada artesanal de flores de Jamaica, 500 gramos"
   },
   
 ];
-
+ 
   const handleAddToCart = (product: typeof featuredProducts[0]) => {
     addToCart(product);
     toast.success(`${product.name} agregado al carrito`);
