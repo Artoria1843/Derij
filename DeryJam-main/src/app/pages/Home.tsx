@@ -10,31 +10,35 @@ export function Home() {
   const featuredProducts = [
     {
       id: 1,
-      name: "Chorizo de Jamaica 1k",
-      price: 140.00,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsHIHgisPUJPcftmEMd_utQC70aTUKj4zQzw&s",
-      description: "Miel 100% natural de flores silvestres"
+      name: "Mezcal de Jamaica 1L",
+    category: "mezcal",
+    price: 150,
+    image: "https://i.pinimg.com/736x/bd/5e/58/bd5e58ce688acfe5708c4e9b946452f0.jpg",
+    description: "Mezcal artesanal con infusión de jamaica 1L"
     },
     {
       id: 2,
-      name: "Chorizo de  Jamaica 1/2k",
-      price: 70.00,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsHIHgisPUJPcftmEMd_utQC70aTUKj4zQzw&s",
-      description: "Mermeladas caseras sin conservadores"
+    name: "Chorizo de Jamaica 500g",
+    category: "chorizo",
+    price: 70,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCUD5lle-cmClHV2Ogmxnshk-dz831-6ejFw&s",
+    description: "Chorizo artesanal de jamaica 500g"
     },
     {
       id: 3,
-      name: "Hierbas Secas",
-      price: 95,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsHIHgisPUJPcftmEMd_utQC70aTUKj4zQzw&s",
-      description: "Hierbas orgánicas deshidratadas"
+       name: "Pulpa de Jamaica 250g",
+    category: "pulpa",
+    price: 25,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeyPbiU3Gvuc4qz2SfhzQy5rWP_BBZ5QhQ4g&s",
+    description: "Pulpa natural de jamaica"
     },
     {
-      id: 4,
-      name: "Miel Premium",
-      price: 220,
-      image: "https://images.unsplash.com/photo-1719871766551-b9ecf87eee51?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuYXR1cmFsJTIwaG9uZXklMjBib3R0bGUlMjBqYXJ8ZW58MXx8fHwxNzc0Mjc3NzAyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      description: "Miel de abeja premium en presentación especial"
+        id: 4,
+    name: "Mermelada de Jamaica 250g",
+    category: "mermelada",
+    price: 30,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-McLWRKPM4S1fuSwKkOhV-AHhUsZjbh4lwQ&s",
+    description: "Mermelada natural de jamaica 250g"
     }
   ];
 
