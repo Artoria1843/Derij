@@ -17,79 +17,64 @@ export function Products() {
   { id: "mermelada", name: "Mermelada de Jamaica" }
 ];
 
- const products = [
-  // 🔴 CHORIZO
-  {
-    id: 1,
-    name: "Chorizo de Jamaica 1kg",
-    category: "chorizo",
-    price: 130,
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCUD5lle-cmClHV2Ogmxnshk-dz831-6ejFw&s",
-    description: "Chorizo artesanal de jamaica 1kg"
-  },
-  {
-    id: 2,
-    name: "Chorizo de Jamaica 500g",
-    category: "chorizo",
-    price: 70,
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCUD5lle-cmClHV2Ogmxnshk-dz831-6ejFw&s",
-    description: "Chorizo artesanal de jamaica 500g"
-  },
-  {
-    id: 3,
-    name: "Chorizo de Jamaica 250g",
-    category: "chorizo",
-    price: 35,
-    image: "https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480_1_5x/img/recipe/ras/Assets/b66f872a179dea7b8d6f717b99077bf9/Derivates/5649f5b2588a2556b3e4517d13ed7a17404c5e6e.jpg",
-    description: "Chorizo artesanal de jamaica 250g"
-  },
-
-  // 🟣 MERMELADA
-  {
-    id: 4,
-    name: "Mermelada de Jamaica 250g",
-    category: "mermelada",
-    price: 30,
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-McLWRKPM4S1fuSwKkOhV-AHhUsZjbh4lwQ&s",
-    description: "Mermelada natural de jamaica 250g"
-  },
-  {
-    id: 5,
-    name: "Mermelada de Jamaica 500g",
-    category: "mermelada",
-    price: 60,
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-McLWRKPM4S1fuSwKkOhV-AHhUsZjbh4lwQ&s",
-    description: "Mermelada natural de jamaica 500g"
-  },
-
-  // 🟢 PULPA
-  {
-    id: 6,
-    name: "Pulpa de Jamaica 250g",
-    category: "pulpa",
-    price: 25,
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeyPbiU3Gvuc4qz2SfhzQy5rWP_BBZ5QhQ4g&s",
-    description: "Pulpa natural de jamaica"
-  },
-
-  // 🟡 MEZCAL
-  {
-    id: 7,
-    name: "Mezcal de Jamaica 1L",
-    category: "mezcal",
-    price: 150,
-    image: "https://i.pinimg.com/736x/bd/5e/58/bd5e58ce688acfe5708c4e9b946452f0.jpg",
-    description: "Mezcal artesanal con infusión de jamaica 1L"
-  },
-  {
-    id: 8,
-    name: "Mezcal de Jamaica 500ml",
-    category: "mezcal",
-    price: 80,
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSieChcefT8jG_koPMdYmECMKMrchWteyIwbA&s",
-    description: "Mezcal artesanal con infusión de jamaica 500ml"
-  }
-];
+  const products = [
+    {
+      id: 1,
+      name: "Chorizo de Jamaica",
+      category: "honey",
+      price: 130,
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsHIHgisPUJPcftmEMd_utQC70aTUKj4zQzw&s",
+      description: "Chorizo de Jamaica, kilo completo"
+    },
+    {
+      id: 2,
+      name: "Chorizo de Jamaica",
+      category: "honey",
+      price: 70,
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsHIHgisPUJPcftmEMd_utQC70aTUKj4zQzw&s",
+      description: "Chorizo de Jamaica, medio kilo"
+    },
+    {
+      id: 3,
+      name: "Chorizo de Jamaica",
+      category: "honey",
+      price: 35,
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsHIHgisPUJPcftmEMd_utQC70aTUKj4zQzw&s",
+      description: "Chorizo de Jamaica, cuarto kilo"
+    },
+    {
+      id: 4,
+      name: "Mezcal de Jamaica",
+      category: "jams",
+      price: 150,
+      image: "https://i5.walmartimages.com/asr/3dda6a32-7d1d-46b9-a297-4cd12c99dc9c.c015af67181a9b4748cd810580b2e092.jpeg",
+      description: "Mezcal artesanal infusionado con flores de Jamaica, 1 litro"
+    },
+    {
+      id: 5,
+      name: "Pulpa de Jamaica 250g",
+      category: "jams",
+      price: 25,
+      image: "https://www.surtilag.com/cdn/shop/files/Pulpa_de_Jamaica_F-Diaz_1L_1000x.png?v=1752333620",
+      description: "Pulpa natural de Jamaica, ideal para bebidas y postres"
+    },
+    {
+      id: 6,
+      name: "Mermelada de Jamaica 250g",
+      category: "jams",
+      price: 35,
+      image: "https://besarteconmezcal.com/wp-content/uploads/2024/11/MERMELADA-DE-JAMAICA.webp",
+      description: "Mermelada artesanal de flores de Jamaica, 250 gramos"
+    },
+    {
+      id: 7,
+      name: "Mermelada de Jamaica 500g",
+      category: "jams",
+      price: 60,
+      image: "https://besarteconmezcal.com/wp-content/uploads/2024/11/MERMELADA-DE-JAMAICA.webp",
+      description: "Mermelada artesanal de flores de Jamaica, 500 gramos"
+    },
+  ];
 
   const handleAddToCart = (product: typeof products[0]) => {
     addToCart(product);

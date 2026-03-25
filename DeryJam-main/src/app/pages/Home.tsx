@@ -8,39 +8,40 @@ export function Home() {
   const { addToCart } = useCart();
 
   const featuredProducts = [
-    {
-      id: 1,
-      name: "Mezcal de Jamaica 1L",
+  {
+    id: 1,
+    name: "Mezcal de Jamaica 1L",
     category: "mezcal",
     price: 150,
-    image: "https://i.pinimg.com/736x/bd/5e/58/bd5e58ce688acfe5708c4e9b946452f0.jpg",
+    image: "https://i5.walmartimages.com/asr/3dda6a32-7d1d-46b9-a297-4cd12c99dc9c.c015af67181a9b4748cd810580b2e092.jpeg",
     description: "Mezcal artesanal con infusión de jamaica 1L"
-    },
-    {
-      id: 2,
-    name: "Chorizo de Jamaica 500g",
+  },
+  {
+    id: 2,
+    name: "Chorizo de Jamaica 1k",
     category: "chorizo",
     price: 70,
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCUD5lle-cmClHV2Ogmxnshk-dz831-6ejFw&s",
-    description: "Chorizo artesanal de jamaica 500g"
-    },
-    {
-      id: 3,
-       name: "Pulpa de Jamaica 250g",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsHIHgisPUJPcftmEMd_utQC70aTUKj4zQzw&s",
+    description: "Chorizo artesanal de jamaica 1k"
+  },
+  {
+    id: 3,
+    name: "Pulpa de Jamaica 250g",
     category: "pulpa",
     price: 25,
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeyPbiU3Gvuc4qz2SfhzQy5rWP_BBZ5QhQ4g&s",
+    image: "https://www.surtilag.com/cdn/shop/files/Pulpa_de_Jamaica_F-Diaz_1L_1000x.png?v=1752333620",
     description: "Pulpa natural de jamaica"
-    },
-    {
-        id: 4,
-    name: "Mermelada de Jamaica 250g",
-    category: "mermelada",
-    price: 30,
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-McLWRKPM4S1fuSwKkOhV-AHhUsZjbh4lwQ&s",
-    description: "Mermelada natural de jamaica 250g"
-    }
-  ];
+  },
+  {
+    id: 4,
+    name: "Mezcal de Jamaica",
+    category: "jams",
+    price: 150,
+    image: "https://i5.walmartimages.com/asr/3dda6a32-7d1d-46b9-a297-4cd12c99dc9c.c015af67181a9b4748cd810580b2e092.jpeg",
+    description: "Mezcal artesanal infusionado con flores de Jamaica, 1 litro"
+  },
+  
+];
 
   const handleAddToCart = (product: typeof featuredProducts[0]) => {
     addToCart(product);
