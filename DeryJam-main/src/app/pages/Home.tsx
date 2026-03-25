@@ -75,35 +75,36 @@ export function Home() {
 
       {/* Hero Section */}
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/80 to-emerald-800/70 z-10" />
-        <ImageWithFallback
-          src="https://vidanayarit.com.mx/wp-content/uploads/2025/08/18_jamaica.png"
-          alt="Hero background"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="relative z-20 text-center text-white px-4 max-w-4xl">
-          <h1 className="text-5xl md:text-6xl mb-6">
-            Productos Naturales y Artesanales
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 text-emerald-100">
-            Directo del campo a tu mesa, con todo el sabor de lo natural
-          </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Link
-              to="/productos"
-              className="bg-[#89030F] hover:bg-[#6e020a] text-white px-8 py-3 rounded-lg transition-colors"
-            >
-              Ver Productos
-            </Link>
-            <Link
-              to="/nosotros"
-              className="bg-[#89030F] hover:bg-[#6e020a] text-white px-8 py-3 rounded-lg transition-colors"
-            >
-              Conoce Más
-            </Link>
-          </div>
-        </div>
-      </section>
+  
+  <ImageWithFallback
+    src="https://vidanayarit.com.mx/wp-content/uploads/2025/08/18_jamaica.png"
+    alt="Hero background"
+    className="absolute inset-0 w-full h-full object-cover"
+  />
+
+  <div className="relative z-20 text-center text-white px-4 max-w-4xl">
+    <h1 className="text-5xl md:text-6xl mb-6">
+      Productos Naturales y Artesanales
+    </h1>
+    <p className="text-xl md:text-2xl mb-8">
+      Directo del campo a tu mesa, con todo el sabor de lo natural
+    </p>
+    <div className="flex gap-4 justify-center flex-wrap">
+      <Link
+        to="/productos"
+        className="bg-[#89030F] hover:bg-[#6e020a] text-white px-8 py-3 rounded-lg transition-colors"
+      >
+        Ver Productos
+      </Link>
+      <Link
+        to="/nosotros"
+        className="bg-[#89030F] hover:bg-[#6e020a] text-white px-8 py-3 rounded-lg transition-colors"
+      >
+        Conoce Más
+      </Link>
+    </div>
+  </div>
+</section>
 
       {/* Features Section */}
       <section className="py-16 bg-[#F7F1E1]">
