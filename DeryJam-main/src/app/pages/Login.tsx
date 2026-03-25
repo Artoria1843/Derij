@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { ShoppingBag, Mail, Lock } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 
 export function Login() {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     password: ""
   });
+
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -20,13 +23,9 @@ export function Login() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Mock validation
+
     if (formData.email && formData.password) {
-      // In a real app, you would authenticate with a backend here
-      console.log("Login attempt:", formData);
-      // Simulate successful login
-      alert("¡Inicio de sesión exitoso! (Esta es una demostración)");
+      alert("¡Inicio de sesión exitoso!");
       navigate("/");
     } else {
       setError("Por favor completa todos los campos");
@@ -34,145 +33,120 @@ export function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full">
-        {/* Logo and Title */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <div className="bg-emerald-600 p-3 rounded-full">
-              <ShoppingBag className="h-10 w-10 text-white" />
-            </div>
-          </div>
-          <h1 className="text-3xl text-emerald-900 mb-2">
-            Bienvenido a deryjam
-          </h1>
-          <p className="text-gray-600">Inicia sesión para continuar</p>
-        </div>
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#F7F1E1] p-4 md:p-8">
+      
+      <div className="w-full max-w-[1000px] flex flex-col md:flex-row rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+        
+        {/* PANEL IZQUIERDO */}
+        <div className="w-full md:w-1/2 relative flex flex-col items-center justify-center p-10 bg-[#5a0209]">
+          
+          {/* Fondo */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center opacity-60 mix-blend-multiply"
+            style={{
+              backgroundImage:
+                "url('https://images.unsplash.com/photo-1652128288793-6a2077ee246b')"
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#79050d]/40 via-transparent to-[#79050d]/80" />
 
-        {/* Login Form */}
-        <div className="bg-white rounded-lg shadow-xl p-8">
-          {error && (
-            <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg text-sm">
-              {error}
-            </div>
-          )}
+          {/* CONTENIDO */}
+          <div className="relative z-10 flex flex-col items-center text-white">
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="email" className="block text-gray-700 mb-2">
-                Correo Electrónico
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  placeholder="tu@email.com"
-                />
-              </div>
+            {/* LOGO */}
+            <div className="w-56 h-56 rounded-full shadow-2xl mb-8 border-[3px] border-[#8a7251]/20 overflow-hidden bg-[#f4ebd9] flex items-center justify-center">
+              <img
+                src="/logo.jpeg"  // ✅ DESDE PUBLIC
+                alt="Logo"
+                className="w-full h-full object-cover"
+              />
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-gray-700 mb-2">
-                Contraseña
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  placeholder="••••••••"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
-                />
-                <span className="ml-2 text-sm text-gray-600">Recordarme</span>
-              </label>
-              <a href="#" className="text-sm text-emerald-600 hover:text-emerald-700">
-                ¿Olvidaste tu contraseña?
-              </a>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg transition-colors"
-            >
-              Iniciar Sesión
-            </button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">
-              ¿No tienes una cuenta?{" "}
-              <Link to="/registro" className="text-emerald-600 hover:text-emerald-700 font-semibold">
-                Regístrate aquí
-              </Link>
+            <h1 className="text-5xl font-black mb-2">DERYJAM</h1>
+            <p className="text-white/90 text-center max-w-[280px]">
+              El sistema integral para la gestión de tus productos
             </p>
           </div>
-
-          {/* Divider */}
-          <div className="mt-6 relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">O continúa con</span>
-            </div>
-          </div>
-
-          {/* Social Login Buttons */}
-          <div className="mt-6 grid grid-cols-2 gap-4">
-            <button className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-              <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
-                <path
-                  fill="#4285F4"
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                />
-                <path
-                  fill="#34A853"
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                />
-                <path
-                  fill="#FBBC05"
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                />
-                <path
-                  fill="#EA4335"
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                />
-              </svg>
-              <span className="text-sm text-gray-700">Google</span>
-            </button>
-            <button className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-              <svg className="h-5 w-5 mr-2" fill="#1877F2" viewBox="0 0 24 24">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-              </svg>
-              <span className="text-sm text-gray-700">Facebook</span>
-            </button>
-          </div>
         </div>
 
-        {/* Back to home */}
-        <div className="text-center mt-6">
-          <Link to="/" className="text-emerald-600 hover:text-emerald-700">
-            ← Volver al inicio
-          </Link>
+        {/* PANEL DERECHO */}
+        <div className="w-full md:w-1/2 bg-[#e9ebe2] p-8 md:p-14 flex flex-col justify-center">
+
+          <div className="max-w-sm w-full mx-auto">
+
+            <h2 className="text-3xl font-black mb-2">Iniciar Sesión</h2>
+            <p className="text-gray-600 mb-6">
+              Ingresa tus credenciales
+            </p>
+
+            {error && (
+              <div className="mb-4 p-3 bg-red-100 text-red-600 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              
+              {/* EMAIL */}
+              <div>
+                <label className="text-sm font-bold">Correo</label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="email"
+                    name="email"
+                    onChange={handleChange}
+                    className="w-full pl-10 py-3 rounded-xl border border-gray-200"
+                  />
+                </div>
+              </div>
+
+              {/* PASSWORD */}
+              <div>
+                <label className="text-sm font-bold">Contraseña</label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    onChange={handleChange}
+                    className="w-full pl-10 pr-10 py-3 rounded-xl border border-gray-200"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                  >
+                    {showPassword ? <EyeOff /> : <Eye />}
+                  </button>
+                </div>
+              </div>
+
+              <button className="w-full py-3 bg-[#c10a16] text-white rounded-xl">
+                INICIAR SESIÓN
+              </button>
+
+              {/* SOCIAL */}
+              <div className="my-6 flex items-center">
+                <div className="flex-grow h-px bg-gray-300"></div>
+                <span className="px-3 text-gray-500 text-sm">O continúa con</span>
+                <div className="flex-grow h-px bg-gray-300"></div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <button className="border rounded-xl py-2">Google</button>
+                <button className="border rounded-xl py-2">Facebook</button>
+              </div>
+            </form>
+
+            <p className="text-center mt-6 text-sm">
+              ¿No tienes cuenta?{" "}
+              <Link to="/registro" className="text-[#c10a16] font-bold">
+                Regístrate
+              </Link>
+            </p>
+
+          </div>
         </div>
       </div>
     </div>
