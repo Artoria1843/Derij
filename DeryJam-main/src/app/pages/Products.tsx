@@ -21,7 +21,7 @@ export function Products() {
     {
       id: 1,
       name: "Chorizo de Jamaica",
-      category: "honey",
+      category: "Chorizo de Jamaica",
       price: 130,
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsHIHgisPUJPcftmEMd_utQC70aTUKj4zQzw&s",
       description: "Chorizo de Jamaica, kilo completo"
