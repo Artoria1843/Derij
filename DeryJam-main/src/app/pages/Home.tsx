@@ -77,7 +77,7 @@ export function Home() {
 
       {/* Hero Section */}
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/80 to-emerald-800/70 z-10" />
+        
         <ImageWithFallback
           src="https://vidanayarit.com.mx/wp-content/uploads/2025/08/18_jamaica.png"
           alt="Hero background"
