@@ -30,10 +30,18 @@ export function Header() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <ShoppingBag className="h-8 w-8 text-emerald-600" />
-            <span className="text-2xl font-bold text-emerald-800">deryjam2</span>
-          </Link>
+         <Link to="/" className="flex items-center gap-2">
+  <div className="p-[2px] rounded-full bg-gradient-to-r from-red-900 to-orange-700">  {/*  borde del logo */}
+    <img 
+      src="/logo.jpeg" 
+      alt="Logo Deryjam" 
+      className="h-10 w-10 rounded-full object-cover bg-white"
+    />
+  </div>
+  <span className="text-2xl font-bold text-red-900">  {/* color del logo */}
+    Deryjam
+  </span>
+</Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
