@@ -130,36 +130,36 @@ export function About() {
         ))}
       </div>
 
+     
       {/* TAXONOMÍA */}
-      <div className="max-w-4xl mx-auto my-24 px-6">
-        <div
-          style={{
-            backgroundColor: "#E1E3DB",
-            borderRadius: "10px",
-            boxShadow: "0 6px 15px rgba(0,0,0,0.1)",
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: "#B9030F",
-              color: "white",
-              padding: "18px",
-              borderTopLeftRadius: "10px",
-              borderTopRightRadius: "10px",
-              textAlign: "center",
-              fontWeight: "bold",
-            }}
-          >
-            {values[2].title}
-          </div>
+<div className="max-w-6xl mx-auto my-24 px-6">
+  <div className="grid md:grid-cols-2 gap-16 items-center">
 
-          <div style={{ padding: "30px" }}>
-            <p style={{ textAlign: "center", lineHeight: "1.8" }}>
-              {values[2].description}
-            </p>
-          </div>
-        </div>
-      </div>
+    {/* IMAGEN */}
+    <div className="rounded-lg overflow-hidden shadow-md">
+      <ImageWithFallback
+        src="/src/assets/BENEFICIOS.jpg"
+        alt="Beneficios de la Jamaica"
+        className="w-full h-full object-cover"
+      />
+    </div>
+
+    {/* TEXTO */}
+    <div>
+      <h2
+        className="text-3xl mb-8"
+        style={{ color: "#9E0004", fontWeight: "bold" }}
+      >
+        {values[2].title}
+      </h2>
+
+      <p style={{ lineHeight: "1.8" }}>
+        {values[2].description}
+      </p>
+    </div>
+
+  </div>
+</div>
 
     </div>
   );
