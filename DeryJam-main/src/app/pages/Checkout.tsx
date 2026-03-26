@@ -12,7 +12,10 @@ export function Checkout() {
 
   const [currentStep, setCurrentStep] = useState<CheckoutStep>("cart");
   const [orderNumber, setOrderNumber] = useState("");
-  const [orderTotal, setOrderTotal] = useState(0); // ← Nuevo estado para guardar el total
+  const [orderTotal, setOrderTotal] = useState(0);
+
+  const [confirmedShipping, setConfirmedShipping] = useState<any>(null);
+  const [confirmedPaymentMethod] = useState("Tarjeta de Crédito / Débito");
 
   const [shippingData, setShippingData] = useState({
     fullName: "",
@@ -29,11 +32,9 @@ export function Checkout() {
     cardName: "",
     cardNumber: "",
     expiryDate: "",
-    cvv: "",
-    paymentMethod: "transfer"
+    cvv: ""
   });
 
-  // Calculamos el total solo mientras estamos en los pasos anteriores a la confirmación
   const subtotal = getTotalPrice();
   const shipping = 0;
   const tax = 0;
@@ -59,13 +60,12 @@ export function Checkout() {
 
   const handlePaymentSubmit = () => {
     const orderNum = "DRJ" + Date.now().toString().slice(-8);
-    
-    // Guardamos el total ANTES de limpiar el carrito
-    setOrderTotal(total);
+
     setOrderNumber(orderNum);
-    
-    clearCart();                    // Limpiamos el carrito
-    
+    setOrderTotal(total);
+    setConfirmedShipping({ ...shippingData });
+
+    clearCart();
     setCurrentStep("confirmation");
   };
 
@@ -73,7 +73,6 @@ export function Checkout() {
     navigate("/");
   };
 
-  // Si el carrito está vacío y no estamos en confirmación → mostrar mensaje
   if (items.length === 0 && currentStep !== "confirmation") {
     return (
       <div className="min-h-screen bg-[#F7F1E1] flex items-center justify-center px-4">
@@ -102,6 +101,7 @@ export function Checkout() {
   return (
     <div className="min-h-screen bg-[#F7F1E1] py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
         {/* Progress Steps */}
         <div className="mb-8">
           <div className="flex items-center justify-between max-w-3xl mx-auto">
@@ -150,22 +150,20 @@ export function Checkout() {
                       <div className="flex-1">
                         <h3 className="mb-1 text-black">{item.name}</h3>
                         <p className="text-gray-600 text-sm mb-2">{item.description}</p>
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              className="p-1 bg-gray-100 rounded hover:bg-gray-200"
-                            >
-                              -
-                            </button>
-                            <span className="w-8 text-center text-black">{item.quantity}</span>
-                            <button
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="p-1 bg-gray-100 rounded hover:bg-gray-200"
-                            >
-                              +
-                            </button>
-                          </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            className="p-1 bg-gray-100 rounded hover:bg-gray-200"
+                          >
+                            -
+                          </button>
+                          <span className="w-8 text-center text-black">{item.quantity}</span>
+                          <button
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            className="p-1 bg-gray-100 rounded hover:bg-gray-200"
+                          >
+                            +
+                          </button>
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
@@ -202,8 +200,7 @@ export function Checkout() {
                   onClick={() => setCurrentStep("shipping")}
                   className="w-full bg-[#89030f] hover:bg-[#6e020a] text-white py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md"
                 >
-                  Continuar al Envío
-                  <ChevronRight className="h-5 w-5" />
+                  Continuar al Envío <ChevronRight className="h-5 w-5" />
                 </button>
               </div>
             </div>
@@ -221,6 +218,7 @@ export function Checkout() {
                 </div>
 
                 <div className="space-y-4">
+                  {/* Campos de envío (sin cambios) */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-gray-700 mb-2">Nombre Completo *</label>
@@ -348,16 +346,14 @@ export function Checkout() {
                     onClick={() => setCurrentStep("cart")}
                     className="flex-1 bg-[#89030f] hover:bg-[#6e020a] text-white py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md"
                   >
-                    <ChevronLeft className="h-5 w-5" />
-                    Volver
+                    <ChevronLeft className="h-5 w-5" /> Volver
                   </button>
                   <button
                     type="button"
                     onClick={handleShippingSubmit}
                     className="flex-1 bg-[#89030f] hover:bg-[#6e020a] text-white py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md"
                   >
-                    Continuar al Pago
-                    <ChevronRight className="h-5 w-5" />
+                    Continuar al Pago <ChevronRight className="h-5 w-5" />
                   </button>
                 </div>
               </div>
@@ -365,7 +361,7 @@ export function Checkout() {
           </div>
         )}
 
-        {/* PAGO */}
+        {/* PAGO CON TARJETA */}
         {currentStep === "payment" && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
@@ -375,75 +371,70 @@ export function Checkout() {
                   <h2 className="text-2xl text-black">Información de Pago</h2>
                 </div>
 
-                <div className="space-y-6">
+                {/* Tarjeta de Crédito / Débito - Diseño como la imagen */}
+                <div className="mb-8">
+                  <div className="bg-[#E6F9F0] border border-emerald-500 rounded-2xl p-5 text-center">
+                    <p className="text-xl font-semibold text-black">
+                      Tarjeta de Crédito / Débito
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-5">
                   <div>
-                    <label className="block text-gray-700 mb-3 font-medium">Método de Pago</label>
-                    <div className="p-4 border-2 border-emerald-500 rounded-lg bg-emerald-50">
-                      <div className="flex items-center gap-3">
-                        <CreditCard className="h-6 w-6 text-emerald-600" />
-                        <div>
-                          <p className="font-semibold text-black">Transferencia Bancaria</p>
-                          <p className="text-sm text-gray-600">
-                            Realiza la transferencia a la cuenta indicada y confirma tu pedido.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+                    <label className="block text-gray-700 mb-2">Nombre en la Tarjeta *</label>
+                    <input
+                      type="text"
+                      name="cardName"
+                      required
+                      value={paymentData.cardName}
+                      onChange={handlePaymentChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      placeholder="JUAN PÉREZ"
+                    />
                   </div>
 
-                  <div className="space-y-4">
+                  <div>
+                    <label className="block text-gray-700 mb-2">Número de Tarjeta *</label>
+                    <input
+                      type="text"
+                      name="cardNumber"
+                      required
+                      value={paymentData.cardNumber}
+                      onChange={handlePaymentChange}
+                      maxLength={19}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      placeholder="1234 5678 9012 3456"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-gray-700 mb-2">Nombre del Titular *</label>
+                      <label className="block text-gray-700 mb-2">Fecha de Vencimiento *</label>
                       <input
                         type="text"
-                        name="cardName"
+                        name="expiryDate"
                         required
-                        value={paymentData.cardName}
+                        value={paymentData.expiryDate}
                         onChange={handlePaymentChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-black"
-                        placeholder="JUAN PEREZ"
+                        maxLength={5}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        placeholder="MM/AA"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-gray-700 mb-2">Número de Cuenta o CLABE *</label>
+                      <label className="block text-gray-700 mb-2">CVV *</label>
                       <input
                         type="text"
-                        name="cardNumber"
+                        name="cvv"
                         required
-                        value={paymentData.cardNumber}
+                        value={paymentData.cvv}
                         onChange={handlePaymentChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-black"
-                        placeholder="Ej: 1234 5678 9012 3456 o CLABE completa"
+                        maxLength={4}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        placeholder="123"
                       />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-gray-700 mb-2">Fecha aproximada de transferencia *</label>
-                        <input
-                          type="text"
-                          name="expiryDate"
-                          required
-                          value={paymentData.expiryDate}
-                          onChange={handlePaymentChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-black"
-                          placeholder="DD/MM/AAAA"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-gray-700 mb-2">Últimos 4 dígitos (opcional)</label>
-                        <input
-                          type="text"
-                          name="cvv"
-                          value={paymentData.cvv}
-                          onChange={handlePaymentChange}
-                          maxLength={4}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-black"
-                          placeholder="1234"
-                        />
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -466,7 +457,7 @@ export function Checkout() {
 
                 <div className="bg-emerald-50 p-4 rounded-lg mb-6">
                   <p className="text-sm text-emerald-800 flex items-center gap-2">
-                    <span className="text-lg">🔒</span> Pago 100% seguro y protegido
+                    <span className="text-lg">🔒</span> Pago seguro con tarjeta
                   </p>
                 </div>
 
@@ -476,16 +467,14 @@ export function Checkout() {
                     onClick={() => setCurrentStep("shipping")}
                     className="flex-1 bg-[#89030f] hover:bg-[#6e020a] text-white py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md"
                   >
-                    <ChevronLeft className="h-5 w-5" />
-                    Volver
+                    <ChevronLeft className="h-5 w-5" /> Volver
                   </button>
                   <button
                     type="button"
                     onClick={handlePaymentSubmit}
                     className="flex-1 bg-[#89030f] hover:bg-[#6e020a] text-white py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md"
                   >
-                    Confirmar Pedido
-                    <CheckCircle className="h-5 w-5" />
+                    Confirmar Pedido <CheckCircle className="h-5 w-5" />
                   </button>
                 </div>
               </div>
@@ -493,45 +482,71 @@ export function Checkout() {
           </div>
         )}
 
-        {/* CONFIRMACIÓN */}
-        {currentStep === "confirmation" && (
+        {/* CONFIRMACIÓN - Botón "Seguir Comprando" en rojo */}
+        {currentStep === "confirmation" && confirmedShipping && (
           <div className="max-w-2xl mx-auto">
-            <div className="bg-white rounded-lg shadow-md p-8 text-center">
-              <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <CheckCircle className="h-12 w-12 text-emerald-600" />
+            <div className="bg-white rounded-2xl shadow-lg p-10 text-center">
+              <div className="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle className="h-14 w-14 text-emerald-600" />
               </div>
 
-              <h2 className="text-3xl mb-4 text-black">¡Pedido Confirmado!</h2>
-              <p className="text-gray-600 mb-6">
+              <h1 className="text-4xl font-semibold text-black mb-2">¡Pedido Confirmado!</h1>
+              <p className="text-gray-600 mb-8 text-lg">
                 Gracias por tu compra. Tu pedido ha sido procesado exitosamente.
               </p>
 
-              <div className="bg-gray-50 p-6 rounded-lg mb-6">
-                <p className="text-sm text-gray-600 mb-2">Número de Pedido</p>
-                <p className="text-2xl text-black mb-4">{orderNumber}</p>
+              <div className="bg-gray-50 rounded-xl p-6 mb-8">
+                <p className="text-sm text-gray-500 mb-1">Número de Pedido</p>
+                <p className="text-3xl font-bold text-emerald-700 tracking-wider">
+                  {orderNumber}
+                </p>
+              </div>
 
-                <div className="border-t pt-4 space-y-3">
-                  <div className="flex justify-between">
+              <div className="bg-gray-50 rounded-xl p-6 mb-8 text-left">
+                <div className="space-y-4">
+                  <div className="flex justify-between text-lg">
                     <span className="text-gray-600">Total Pagado:</span>
-                    <span className="text-lg text-black">${orderTotal.toFixed(2)}</span>
+                    <span className="font-semibold text-black">${orderTotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Método de Pago:</span>
-                    <span className="text-black">Transferencia Bancaria</span>
+                    <span className="font-medium text-black">{confirmedPaymentMethod}</span>
                   </div>
                 </div>
               </div>
 
+              <div className="bg-blue-50 rounded-xl p-6 mb-10 text-left">
+                <h3 className="font-semibold text-lg mb-4 text-black">Información de Envío:</h3>
+                <div className="space-y-2 text-gray-700 leading-relaxed">
+                  <p className="font-medium">{confirmedShipping.fullName}</p>
+                  <p>{confirmedShipping.address}</p>
+                  <p>
+                    {confirmedShipping.city}, {confirmedShipping.state} {confirmedShipping.postalCode}
+                  </p>
+                  <p>Teléfono: {confirmedShipping.phone}</p>
+                  
+                </div>
+              </div>
+
+              <p className="text-gray-600 text-sm mb-10">
+                Hemos enviado un correo de confirmación a{" "}
+                <span className="font-medium text-black underline">
+                  {confirmedShipping.email}
+                </span>{" "}
+                con los detalles de tu pedido.
+              </p>
+
+              {/* Botones finales */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={handleFinish}
-                  className="flex-1 bg-[#89030f] hover:bg-[#6e020a] text-white py-3 rounded-lg transition-colors shadow-md"
+                  className="flex-1 bg-[#89030f] hover:bg-[#6e020a] text-white py-4 rounded-xl font-medium transition-all shadow-md"
                 >
                   Volver al Inicio
                 </button>
                 <button
                   onClick={() => navigate("/productos")}
-                  className="flex-1 bg-[#89030f] hover:bg-[#6e020a] text-white py-3 rounded-lg transition-colors shadow-md"
+                  className="flex-1 bg-[#89030f] hover:bg-[#6e020a] text-white py-4 rounded-xl font-medium transition-all shadow-md"
                 >
                   Seguir Comprando
                 </button>
