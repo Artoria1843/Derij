@@ -16,6 +16,7 @@ export function Home() {
     image: "https://i.pinimg.com/736x/bd/5e/58/bd5e58ce688acfe5708c4e9b946452f0.jpg",
     description: "Mezcal artesanal con infusión de jamaica 1L"
     },
+
     {
       id: 2,
     name: "Chorizo de Jamaica 500g",
@@ -24,6 +25,7 @@ export function Home() {
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCUD5lle-cmClHV2Ogmxnshk-dz831-6ejFw&s",
     description: "Chorizo artesanal de jamaica 500g"
     },
+
     {
       id: 3,
        name: "Pulpa de Jamaica 250g",
@@ -32,6 +34,8 @@ export function Home() {
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeyPbiU3Gvuc4qz2SfhzQy5rWP_BBZ5QhQ4g&s",
     description: "Pulpa natural de jamaica"
     },
+
+    
     {
         id: 4,
     name: "Mermelada de Jamaica 250g",
@@ -83,12 +87,13 @@ export function Home() {
   />
 
   <div className="relative z-20 text-center text-white px-4 max-w-4xl">
-    <h1 className="text-5xl md:text-6xl mb-6">
-      Productos Naturales y Artesanales
-    </h1>
-    <p className="text-xl md:text-2xl mb-8">
-      Directo del campo a tu mesa, con todo el sabor de lo natural
-    </p>
+    <h1 className="text-5xl md:text-6xl mb-6 text-white [text-shadow:2px_2px_0px_black,-2px_-2px_0px_black,2px_-2px_0px_black,-2px_2px_0px_black]">
+  Productos Naturales y Artesanales  {/* borde de letra*/}
+</h1>
+
+<p className="text-xl md:text-2xl mb-8 text-white [text-shadow:1px_1px_0px_black,-1px_-1px_0px_black,1px_-1px_0px_black,-1px_1px_0px_black]">
+  Directo del campo a tu mesa, con todo el sabor de lo natural
+</p>
     <div className="flex gap-4 justify-center flex-wrap">
       <Link
         to="/productos"
