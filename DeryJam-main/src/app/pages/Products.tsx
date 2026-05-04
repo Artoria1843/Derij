@@ -11,6 +11,7 @@ type Product = {
   categoria: string;
   precio: number;
   imagen: string;
+  descripcion: string; // 🔥 NUEVO
 };
 
 type Categoria = {
@@ -25,27 +26,36 @@ export function Products() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const { addToCart } = useCart();
+  const API_URL = "http://localhost:3001";
 
-  // CARGAR PRODUCTOS
+  /* =========================
+        PRODUCTOS
+  ========================= */
   useEffect(() => {
-    axios.get("http://localhost:3001/productos")
+    axios
+      .get(`${API_URL}/productos`)
       .then(res => setProducts(res.data))
       .catch(err => console.log(err));
   }, []);
 
-  // CARGAR CATEGORÍAS
+  /* =========================
+        CATEGORÍAS
+  ========================= */
   useEffect(() => {
-    axios.get("http://localhost:3001/categorias")
+    axios
+      .get(`${API_URL}/categorias`)
       .then(res => setCategories(res.data))
       .catch(err => console.log(err));
   }, []);
 
   const handleAddToCart = (product: any) => {
     addToCart(product);
-    toast.success(`${product.name} agregado al carrito`);
+    toast.success(`${product.nombre} agregado al carrito`);
   };
 
-  // FILTRO
+  /* =========================
+        FILTRO
+  ========================= */
   const filteredProducts = products.filter(product => {
     const matchesCategory =
       selectedCategory === "all" || product.categoria === selectedCategory;
@@ -77,7 +87,7 @@ export function Products() {
 
       {/* FILTROS */}
       <section className="bg-white shadow p-6 flex flex-col md:flex-row justify-between gap-4">
-        
+
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={() => setSelectedCategory("all")}
@@ -119,17 +129,30 @@ export function Products() {
 
       {/* PRODUCTOS */}
       <section className="p-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+
         {filteredProducts.map(product => (
           <div key={product.id} className="bg-white p-4 rounded shadow">
 
+            {/* IMAGEN */}
             <ImageWithFallback
-              src={product.imagen || "https://via.placeholder.com/300"}
+              src={
+                product.imagen
+                  ? `${API_URL}/uploads/${product.imagen}`
+                  : "https://via.placeholder.com/300"
+              }
               alt={product.nombre}
               className="w-full h-40 object-cover"
             />
 
-            <h3 className="mt-2">{product.nombre}</h3>
+            {/* NOMBRE */}
+            <h3 className="mt-2 font-bold">{product.nombre}</h3>
 
+            {/* DESCRIPCIÓN 🔥 NUEVO */}
+            <p className="text-sm text-gray-600 mt-1">
+              {product.descripcion}
+            </p>
+
+            {/* PRECIO + BOTÓN */}
             <div className="flex justify-between items-center mt-2">
               <span>${product.precio}</span>
 
@@ -138,10 +161,10 @@ export function Products() {
                 onClick={() =>
                   handleAddToCart({
                     id: product.id,
-                    name: product.nombre,
-                    category: product.categoria,
-                    price: product.precio,
-                    image: product.imagen
+                    nombre: product.nombre,
+                    categoria: product.categoria,
+                    precio: product.precio,
+                    imagen: product.imagen
                   })
                 }
               >
@@ -151,6 +174,7 @@ export function Products() {
 
           </div>
         ))}
+
       </section>
 
     </div>
