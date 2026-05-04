@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter } from "react-router-dom";
 
 // Layout
 import { Layout } from "./components/Layout";
@@ -11,10 +11,13 @@ import { Contact } from "./pages/Contact";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { Checkout } from "./pages/Checkout";
-import { AdminProducts } from "./pages/AdminProducts"; // 👈 IMPORTANTE
+
 // ADMIN
-import { AdminPanel } from "./pages/AdminPanel";
-import { AdminCategories } from "./pages/AdminCategories";
+import { AdminProducts } from "./pages/Admin/AdminProducts";
+import { AdminPanel } from "./pages/Admin/AdminPanel";
+import { AdminCategories } from "./pages/Admin/AdminCategories";
+import { Usuarios } from "./pages/Admin/Usuarios";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -27,10 +30,12 @@ export const router = createBrowserRouter([
       { path: "login", Component: Login },
       { path: "registro", Component: Register },
       { path: "checkout", Component: Checkout },
-{ path: "admin/productos", Component: AdminProducts },
-{ path: "admin/categorias", Component: AdminCategories },
-      // PANEL ADMIN
+
+      // ADMIN
       { path: "admin", Component: AdminPanel },
+      { path: "admin/productos", Component: AdminProducts },
+      { path: "admin/categorias", Component: AdminCategories },
+      { path: "admin/usuarios", Component: Usuarios },
     ],
   },
 ]);

@@ -11,7 +11,7 @@ type Product = {
   categoria: string;
   precio: number;
   imagen: string;
-  descripcion: string; // 🔥 NUEVO
+  descripcion: string; //  NUEVO
 };
 
 type Categoria = {
@@ -137,7 +137,7 @@ export function Products() {
             <ImageWithFallback
               src={
                 product.imagen
-                  ? `${API_URL}/uploads/${product.imagen}`
+                  ? `${API_URL}${product.imagen}`
                   : "https://via.placeholder.com/300"
               }
               alt={product.nombre}
@@ -147,7 +147,7 @@ export function Products() {
             {/* NOMBRE */}
             <h3 className="mt-2 font-bold">{product.nombre}</h3>
 
-            {/* DESCRIPCIÓN 🔥 NUEVO */}
+            {/* DESCRIPCIÓN  NUEVO */}
             <p className="text-sm text-gray-600 mt-1">
               {product.descripcion}
             </p>

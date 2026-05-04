@@ -1,6 +1,6 @@
 import { X, Plus, Minus, Trash2, ShoppingCart } from "lucide-react";
 import { useCart } from "../context/CartContext";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 
 interface CartDrawerProps {

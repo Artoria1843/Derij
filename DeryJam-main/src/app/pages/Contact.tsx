@@ -20,23 +20,40 @@ export function Contact() {
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Here you would normally send the form data to a backend
-    console.log("Form data:", formData);
-    setSubmitted(true);
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        subject: "",
-        message: ""
-      });
-      setSubmitted(false);
-    }, 3000);
-  };
+  e.preventDefault();
+
+  const phoneNumber = "7451249123"; // ← Cambia por tu número (con lada, sin + ni espacios)
+
+  const message = `
+ Nuevo contacto desde la web
+
+Nombre: ${formData.name}
+Email: ${formData.email}
+Teléfono: ${formData.phone}
+Asunto: ${formData.subject}
+Mensaje: ${formData.message}
+  `;
+
+  const encodedMessage = encodeURIComponent(message);
+
+  const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+  // Redirige a WhatsApp
+  window.open(whatsappURL, "_blank");
+
+  setSubmitted(true);
+
+  setTimeout(() => {
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      subject: "",
+      message: ""
+    });
+    setSubmitted(false);
+  }, 3000);
+};
 
   const contactInfo = [
     {
