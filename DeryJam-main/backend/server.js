@@ -1,33 +1,26 @@
 // ==============================
 // IMPORTACIONES
 // ==============================
-import express from "express";      // framework backend
-import cors from "cors";            // permitir peticiones del frontend
-import multer from "multer";        // subir imágenes
-import mysql from "mysql2";         // conexión a MySQL
-import path from "path";            // manejar rutas de archivos
+import express from "express";
+import cors from "cors";
+import multer from "multer";
+import mysql from "mysql2";
+
+import registroRoutes from "./routes/registro.js";
+import loginRoutes from "./routes/login.js";
 
 const app = express();
 
-
 // ==============================
-// MIDDLEWARES
+// MIDDLEWARES GLOBALES
 // ==============================
-
-// permitir conexiones desde frontend (React)
 app.use(cors());
-
-// permitir enviar JSON
 app.use(express.json());
-
-// servir carpeta uploads (para ver imágenes en navegador)
 app.use("/uploads", express.static("uploads"));
 
-
 // ==============================
-// CONEXIÓN A BASE DE DATOS
+// CONEXIÓN BD (SE QUEDA AQUÍ)
 // ==============================
-
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -35,92 +28,50 @@ const db = mysql.createConnection({
   database: "sistema_ventas",
 });
 
-// conectar a la BD
 db.connect((err) => {
-  if (err) {
-    console.log("ERROR BD:", err);
-  } else {
-    console.log("BD CONECTADA");
-  }
+  if (err) console.log("ERROR BD:", err);
+  else console.log("BD CONECTADA");
 });
 
+// 🔥 PASAR BD A TODAS LAS RUTAS
+app.use((req, res, next) => {
+  req.db = db;
+  next();
+});
 
 // ==============================
-// SEGURIDAD BÁSICA ADMIN
+// RUTAS
 // ==============================
+app.use("/registro", registroRoutes);
+app.use("/login", loginRoutes);
 
-// middleware para validar si es admin
+// ==============================
+// ADMIN MIDDLEWARE
+// ==============================
 function verificarAdmin(req, res, next) {
   const rol = req.headers["rol"];
 
-  // si no es admin (1), bloquear
   if (rol != 1) {
     return res.status(403).json({ error: "No autorizado" });
   }
 
-  next(); // continuar
+  next();
 }
 
-
 // ==============================
-// CONFIGURACIÓN MULTER (IMÁGENES)
+// MULTER (IMÁGENES)
 // ==============================
-
-// definir dónde guardar imágenes
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // carpeta destino
-  },
-  filename: (req, file, cb) => {
-    // nombre único (fecha + nombre original)
-    cb(null, Date.now() + "-" + file.originalname);
-  },
+  destination: (req, file, cb) => cb(null, "uploads/"),
+  filename: (req, file, cb) =>
+    cb(null, Date.now() + "-" + file.originalname),
 });
 
-// inicializar multer
 const upload = multer({ storage });
-
-
-// ==============================
-// LOGIN
-// ==============================
-
-// iniciar sesión
-app.post("/login", (req, res) => {
-  const { email, password } = req.body;
-
-  const sql = "SELECT * FROM usuario WHERE Email = ?";
-
-  db.query(sql, [email], (err, result) => {
-    if (err) return res.status(500).json(err);
-
-    // usuario no existe
-    if (result.length === 0) {
-      return res.status(401).json({ error: "Usuario no existe" });
-    }
-
-    const user = result[0];
-
-    // validar contraseña
-    if (user.Contrasena !== password) {
-      return res.status(401).json({ error: "Contraseña incorrecta" });
-    }
-
-    // devolver datos
-    res.json({
-      id: user.Id_usuario,
-      nombre: user.Nombre,
-      rol: user.Id_Rol
-    });
-  });
-});
-
 
 // ==============================
 // PRODUCTOS
 // ==============================
-
-// OBTENER PRODUCTOS
 app.get("/productos", (req, res) => {
   const sql = `
     SELECT 
@@ -140,26 +91,18 @@ app.get("/productos", (req, res) => {
   });
 });
 
-
 // CREAR PRODUCTO
 app.post("/productos", verificarAdmin, upload.single("imagen"), (req, res) => {
   const { nombre, precio, Id_categoria, descripcion } = req.body;
 
-  // validar imagen
   if (!req.file) {
     return res.status(400).json({ error: "Imagen requerida" });
   }
 
-  // guardar ruta de imagen
   const imagen = `/uploads/${req.file.filename}`;
 
-  const sql = `
-    INSERT INTO producto (Nombre, Precio, Id_categoria, Imagen, Descripcion)
-    VALUES (?, ?, ?, ?, ?)
-  `;
-
   db.query(
-    sql,
+    "INSERT INTO producto (Nombre, Precio, Id_categoria, Imagen, Descripcion) VALUES (?, ?, ?, ?, ?)",
     [nombre, precio, Id_categoria, imagen, descripcion || ""],
     (err) => {
       if (err) return res.status(500).json(err);
@@ -168,44 +111,44 @@ app.post("/productos", verificarAdmin, upload.single("imagen"), (req, res) => {
   );
 });
 
-
 // ACTUALIZAR PRODUCTO
-app.put("/productos/:id", verificarAdmin, upload.single("imagen"), (req, res) => {
-  const { nombre, precio, Id_categoria, descripcion } = req.body;
-  const id = req.params.id;
+app.put(
+  "/productos/:id",
+  verificarAdmin,
+  upload.single("imagen"),
+  (req, res) => {
+    const { nombre, precio, Id_categoria, descripcion } = req.body;
+    const id = req.params.id;
 
-  let sql;
-  let values;
+    let sql;
+    let values;
 
-  // si se envía nueva imagen
-  if (req.file) {
-    const imagen = `/uploads/${req.file.filename}`;
+    if (req.file) {
+      const imagen = `/uploads/${req.file.filename}`;
 
-    sql = `
-      UPDATE producto
-      SET Nombre=?, Precio=?, Id_categoria=?, Imagen=?, Descripcion=?
-      WHERE Id_producto=?
-    `;
+      sql = `
+        UPDATE producto
+        SET Nombre=?, Precio=?, Id_categoria=?, Imagen=?, Descripcion=?
+        WHERE Id_producto=?
+      `;
 
-    values = [nombre, precio, Id_categoria, imagen, descripcion || "", id];
+      values = [nombre, precio, Id_categoria, imagen, descripcion || "", id];
+    } else {
+      sql = `
+        UPDATE producto
+        SET Nombre=?, Precio=?, Id_categoria=?, Descripcion=?
+        WHERE Id_producto=?
+      `;
 
-  } else {
-    // sin cambiar imagen
-    sql = `
-      UPDATE producto
-      SET Nombre=?, Precio=?, Id_categoria=?, Descripcion=?
-      WHERE Id_producto=?
-    `;
+      values = [nombre, precio, Id_categoria, descripcion || "", id];
+    }
 
-    values = [nombre, precio, Id_categoria, descripcion || "", id];
+    db.query(sql, values, (err) => {
+      if (err) return res.status(500).json(err);
+      res.json({ mensaje: "Producto actualizado" });
+    });
   }
-
-  db.query(sql, values, (err) => {
-    if (err) return res.status(500).json(err);
-    res.json({ mensaje: "Producto actualizado" });
-  });
-});
-
+);
 
 // ELIMINAR PRODUCTO
 app.delete("/productos/:id", verificarAdmin, (req, res) => {
@@ -219,12 +162,9 @@ app.delete("/productos/:id", verificarAdmin, (req, res) => {
   );
 });
 
-
 // ==============================
 // CATEGORÍAS
 // ==============================
-
-// OBTENER CATEGORÍAS ACTIVAS
 app.get("/categorias", (req, res) => {
   db.query(
     "SELECT * FROM categoria WHERE Estado = 'activo'",
@@ -235,14 +175,8 @@ app.get("/categorias", (req, res) => {
   );
 });
 
-
-// CREAR CATEGORÍA
 app.post("/categorias", verificarAdmin, (req, res) => {
   const { nombre } = req.body;
-
-  if (!nombre) {
-    return res.status(400).json({ error: "Nombre requerido" });
-  }
 
   db.query(
     "INSERT INTO categoria (Nombre, Estado) VALUES (?, 'activo')",
@@ -254,11 +188,9 @@ app.post("/categorias", verificarAdmin, (req, res) => {
   );
 });
 
-
-// DESACTIVAR CATEGORÍA (NO BORRAR)
 app.delete("/categorias/:id", verificarAdmin, (req, res) => {
   db.query(
-    "UPDATE categoria SET Estado = 'inactivo' WHERE Id_categoria = ?",
+    "UPDATE categoria SET Estado='inactivo' WHERE Id_categoria=?",
     [req.params.id],
     (err) => {
       if (err) return res.status(500).json(err);
@@ -267,11 +199,9 @@ app.delete("/categorias/:id", verificarAdmin, (req, res) => {
   );
 });
 
-
 // ==============================
-// INICIAR SERVIDOR
+// SERVIDOR
 // ==============================
-
 app.listen(3001, () => {
   console.log("Servidor corriendo en http://localhost:3001");
 });

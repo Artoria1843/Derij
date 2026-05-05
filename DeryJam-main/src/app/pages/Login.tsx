@@ -21,14 +21,43 @@ export function Login() {
     setError("");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // 🔥 AQUÍ YA CONECTA A TU BD
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (formData.email && formData.password) {
+    if (!formData.email || !formData.password) {
+      setError("Por favor completa todos los campos");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:3001/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Error al iniciar sesión");
+        return;
+      }
+
+      // guardar sesión
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
       alert("¡Inicio de sesión exitoso!");
       navigate("/");
-    } else {
-      setError("Por favor completa todos los campos");
+
+    } catch (err) {
+      setError("Error de conexión con el servidor");
     }
   };
 
@@ -40,7 +69,6 @@ export function Login() {
         {/* PANEL IZQUIERDO */}
         <div className="w-full md:w-1/2 relative flex flex-col items-center justify-center p-10 bg-[#5a0209]">
           
-          {/* Fondo */}
           <div 
             className="absolute inset-0 bg-cover bg-center opacity-60 mix-blend-multiply"
             style={{
@@ -50,13 +78,11 @@ export function Login() {
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#79050d]/40 via-transparent to-[#79050d]/80" />
 
-          {/* CONTENIDO */}
           <div className="relative z-10 flex flex-col items-center text-white">
 
-            {/* LOGO */}
             <div className="w-56 h-56 rounded-full shadow-2xl mb-8 border-[3px] border-[#8a7251]/20 overflow-hidden bg-[#f4ebd9] flex items-center justify-center">
               <img
-                src="/logo.jpeg"  // ✅ DESDE PUBLIC
+                src="/logo.jpeg"
                 alt="Logo"
                 className="w-full h-full object-cover"
               />
