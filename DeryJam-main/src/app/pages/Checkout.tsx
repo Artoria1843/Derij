@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { CreditCard, Truck, CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-
+import axios from "axios";
 type CheckoutStep = "cart" | "shipping" | "payment" | "confirmation";
 
 export function Checkout() {
@@ -54,20 +54,54 @@ export function Checkout() {
     });
   };
 
-  const handleShippingSubmit = () => {
-    setCurrentStep("payment");
-  };
+const handleShippingSubmit = () => {
+  if (
+    !shippingData.fullName.trim() ||
+    !shippingData.email.trim() ||
+    !shippingData.phone.trim() ||
+    !shippingData.address.trim() ||
+    !shippingData.city.trim() ||
+    !shippingData.state.trim() ||
+    !shippingData.postalCode.trim()
+  ) {
+    alert("Por favor completa todos los campos obligatorios (*)");
+    return;
+  }
 
-  const handlePaymentSubmit = () => {
-    const orderNum = "DRJ" + Date.now().toString().slice(-8);
+  setCurrentStep("payment");
+};
 
-    setOrderNumber(orderNum);
+const handlePaymentSubmit = async () => {
+  const raw = localStorage.getItem("user");
+  const user = raw ? JSON.parse(raw) : null;
+
+  if (!user) {
+    alert("Debes iniciar sesión para completar la compra.");
+    return;
+  }
+
+  try {
+    const res = await axios.post("http://localhost:3001/checkout", {
+      userId: user.id,
+      shippingData,
+      items: items.map((i) => ({
+        id: i.id,
+        quantity: i.quantity,
+        price: i.price
+      })),
+      total
+    });
+
+    setOrderNumber(res.data.numeroOrden);
     setOrderTotal(total);
     setConfirmedShipping({ ...shippingData });
 
     clearCart();
     setCurrentStep("confirmation");
-  };
+  } catch (err: any) {
+    alert(err.response?.data?.msg || "Error al procesar la compra");
+  }
+};
 
   const handleFinish = () => {
     navigate("/");

@@ -40,7 +40,7 @@ export function Navbar() {
               className="flex items-center gap-2 bg-[#5a0209] text-white px-4 py-2 rounded-xl"
             >
               <User size={18} />
-              {user?.name || "Perfil"}
+             {user?.nombre || "Perfil"}
             </Link>
 
             {/* LOGOUT */}

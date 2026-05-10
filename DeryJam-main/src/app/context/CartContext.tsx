@@ -1,4 +1,11 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode
+} from "react";
+import axios from "axios";
 
 export interface CartItem {
   id: number;
@@ -7,65 +14,136 @@ export interface CartItem {
   image: string;
   quantity: number;
   description: string;
+  stock: number; // stock disponible en inventario
 }
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (item: Omit<CartItem, "quantity">) => void;
-  removeFromCart: (id: number) => void;
-  updateQuantity: (id: number, quantity: number) => void;
+  addToCart: (item: Omit<CartItem, "quantity">) => Promise<void>;
+  removeFromCart: (id: number) => Promise<void>;
+  updateQuantity: (id: number, quantity: number) => Promise<void>;
   clearCart: () => void;
   getTotalItems: () => number;
   getTotalPrice: () => number;
+  loadCart: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
+const API_URL = "http://localhost:3001";
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
 
-  const addToCart = (item: Omit<CartItem, "quantity">) => {
-    setItems(currentItems => {
-      const existingItem = currentItems.find(i => i.id === item.id);
-      
-      if (existingItem) {
-        return currentItems.map(i =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      }
-      
-      return [...currentItems, { ...item, quantity: 1 }];
-    });
+  // Obtener usuario del localStorage (lo guarda tu login)
+  const getUser = () => {
+    const raw = localStorage.getItem("user");
+    return raw ? JSON.parse(raw) : null;
   };
 
-  const removeFromCart = (id: number) => {
-    setItems(currentItems => currentItems.filter(item => item.id !== id));
+  // Cargar carrito desde BD al iniciar sesión
+  const loadCart = async () => {
+    const user = getUser();
+    if (!user) return;
+
+    try {
+      const res = await axios.get(`${API_URL}/carrito/${user.id}`);
+      const mapped: CartItem[] = res.data.map((row: any) => ({
+        id: row.Id_producto,
+        name: row.nombre,
+        price: row.precio,
+        image: row.imagen,
+        description: row.descripcion,
+        quantity: row.Cantidad,
+        stock: row.stock_disponible
+      }));
+      setItems(mapped);
+    } catch (err) {
+      console.error("Error cargando carrito:", err);
+    }
   };
 
-  const updateQuantity = (id: number, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(id);
+  useEffect(() => {
+    loadCart();
+  }, []);
+
+  // ── Agregar ──
+  const addToCart = async (item: Omit<CartItem, "quantity">) => {
+    const user = getUser();
+
+    // 1. Si no hay sesión, redirigir a login
+    if (!user) {
+      alert("Debes iniciar sesión para agregar productos al carrito.");
+      window.location.href = "/login";
       return;
     }
-    
-    setItems(currentItems =>
-      currentItems.map(item =>
-        item.id === id ? { ...item, quantity } : item
-      )
-    );
+
+    // 2. Verificar stock local antes de llamar al API
+    const existing = items.find((i) => i.id === item.id);
+    const cantidadActual = existing ? existing.quantity : 0;
+
+    if (cantidadActual >= item.stock) {
+      alert(`No hay más stock disponible para este producto.`);
+      return;
+    }
+
+    try {
+      await axios.post(`${API_URL}/carrito`, {
+        userId: user.id,
+        productId: item.id,
+        cantidad: 1
+      });
+      await loadCart(); // recargar desde BD para tener datos frescos
+    } catch (err: any) {
+      alert(err.response?.data?.msg || "Error al agregar al carrito");
+    }
   };
 
-  const clearCart = () => {
-    setItems([]);
+  // ── Eliminar ──
+  const removeFromCart = async (id: number) => {
+    const user = getUser();
+    if (!user) return;
+
+    try {
+      await axios.delete(`${API_URL}/carrito/${user.id}/${id}`);
+      setItems((curr) => curr.filter((i) => i.id !== id));
+    } catch (err: any) {
+      alert(err.response?.data?.msg || "Error al eliminar del carrito");
+    }
   };
 
-  const getTotalItems = () => {
-    return items.reduce((total, item) => total + item.quantity, 0);
+  // ── Actualizar cantidad (botones + y -) ──
+  const updateQuantity = async (id: number, nuevaCantidad: number) => {
+    const user = getUser();
+    if (!user) return;
+
+    // Verificar stock disponible antes de aumentar
+    if (nuevaCantidad > 0) {
+      const item = items.find((i) => i.id === id);
+      if (item && nuevaCantidad > item.quantity + item.stock) {
+        alert("No hay suficiente stock disponible.");
+        return;
+      }
+    }
+
+    try {
+      await axios.put(`${API_URL}/carrito`, {
+        userId: user.id,
+        productId: id,
+        nuevaCantidad
+      });
+      await loadCart();
+    } catch (err: any) {
+      alert(err.response?.data?.msg || "Error al actualizar cantidad");
+    }
   };
 
-  const getTotalPrice = () => {
-    return items.reduce((total, item) => total + item.price * item.quantity, 0);
-  };
+  const clearCart = () => setItems([]);
+
+  const getTotalItems = () =>
+    items.reduce((total, item) => total + item.quantity, 0);
+
+  const getTotalPrice = () =>
+    items.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <CartContext.Provider
@@ -77,6 +155,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         clearCart,
         getTotalItems,
         getTotalPrice,
+        loadCart
       }}
     >
       {children}

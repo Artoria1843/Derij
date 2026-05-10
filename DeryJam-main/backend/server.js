@@ -5,9 +5,11 @@ import express from "express";
 import cors from "cors";
 import multer from "multer";
 import mysql from "mysql2";
-
+import carritoRoutes from "./routes/carrito.js";
+import checkoutRoutes from "./routes/checkout.js";
 import registroRoutes from "./routes/registro.js";
 import loginRoutes from "./routes/login.js";
+
 
 const app = express();
 
@@ -42,6 +44,8 @@ app.use((req, res, next) => {
 // ==============================
 // RUTAS
 // ==============================
+app.use("/carrito", carritoRoutes);
+app.use("/checkout", checkoutRoutes);
 app.use("/registro", registroRoutes);
 app.use("/login", loginRoutes);
 
