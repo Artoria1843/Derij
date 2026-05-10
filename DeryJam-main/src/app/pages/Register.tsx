@@ -43,7 +43,8 @@ export function Register() {
   const validations = {
     name: /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]{3,}$/,
 
-    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    email:
+     /^[a-zA-Z0-9._%+-]+@(gmail\.com|hotmail\.com|outlook\.com|icloud\.com|smarcos\.tecnm\.mx|yahoo\.com)$/i,
 
     phone: /^[0-9]{10}$/,
 
