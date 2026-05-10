@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
         db.query(
           `INSERT INTO usuario (Nombre, Email, Contrasena, Telefono, Id_Rol)
            VALUES (?, ?, ?, ?, ?)`,
-          [name, email, hash, phone || null, 1],
+          [name, email, hash, phone || null, 2],
           (err2) => {
             if (err2) return res.status(500).json(err2);
 

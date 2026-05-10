@@ -11,7 +11,7 @@ import { Contact } from "./pages/Contact";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { Checkout } from "./pages/Checkout";
-
+import { Profile } from "./pages/Profile";
 // ADMIN
 import { AdminProducts } from "./pages/Admin/AdminProducts";
 import { AdminPanel } from "./pages/Admin/AdminPanel";
@@ -30,7 +30,7 @@ export const router = createBrowserRouter([
       { path: "login", Component: Login },
       { path: "registro", Component: Register },
       { path: "checkout", Component: Checkout },
-
+{ path: "perfil", Component: Profile },
       // ADMIN
       { path: "admin", Component: AdminPanel },
       { path: "admin/productos", Component: AdminProducts },

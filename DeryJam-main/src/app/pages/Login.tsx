@@ -54,7 +54,7 @@ export function Login() {
       localStorage.setItem("user", JSON.stringify(data.user));
 
       alert("¡Inicio de sesión exitoso!");
-      navigate("/");
+     window.location.href = "/";
 
     } catch (err) {
       setError("Error de conexión con el servidor");
