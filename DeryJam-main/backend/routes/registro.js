@@ -5,7 +5,7 @@ const router = express.Router();
 
 // ================= REGISTRO =================
 router.post("/", async (req, res) => {
-  const db = req.db; // 👈 AQUÍ VA
+  const db = req.db; 
 
   const { name, email, phone, password } = req.body;
 

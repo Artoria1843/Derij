@@ -75,7 +75,15 @@ export function AdminProducts() {
   ========================= */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+if (!nombre || !precio || !categoria) {
+  alert("Faltan datos obligatorios");
+  return;
+}
 
+if (isNaN(Number(precio))) {
+  alert("El precio debe ser un número válido");
+  return;
+}
     const formData = new FormData();
     formData.append("nombre", nombre);
     formData.append("precio", precio);
@@ -112,31 +120,42 @@ export function AdminProducts() {
     cargarProductos();
   };
 
-  /* =========================
-     EDITAR
-  ========================= */
-  const guardarEdicion = async () => {
-    if (!editando) return;
+/* =========================
+   EDITAR
+========================= */
+const guardarEdicion = async () => {
+  if (!editando) return;
+if (!editando.nombre || !editando.precio) {
+  alert("Campos vacíos no permitidos");
+  return;
+}
 
-    const formData = new FormData();
-    formData.append("nombre", editando.nombre);
-    formData.append("precio", editando.precio);
-    formData.append("Id_categoria", String(editando.Id_categoria || ""));
-    formData.append("descripcion", editando.descripcion || "");
+if (isNaN(Number(editando.precio))) {
+  alert("Precio inválido");
+  return;
+}
+  const formData = new FormData();
 
-    if (editando.imagenFile) {
-      formData.append("imagen", editando.imagenFile);
-    }
+  formData.append("nombre", editando.nombre);
+  formData.append("precio", editando.precio);
+  formData.append("descripcion", editando.descripcion || "");
 
-    await axios.put(
-      `${API_URL}/productos/${editando.id}`,
-      formData,
-      { headers: { rol: 1 } }
-    );
+  // FIX IMPORTANTE (antes podía ser undefined)
+  formData.append("Id_categoria", String(editando.Id_categoria || ""));
 
-    setEditando(null);
-    cargarProductos();
-  };
+  if (editando.imagenFile) {
+    formData.append("imagen", editando.imagenFile);
+  }
+
+  await axios.put(
+    `${API_URL}/productos/${editando.id}`,
+    formData,
+    { headers: { rol: 1 } }
+  );
+
+  setEditando(null);
+  cargarProductos();
+};
 
   /* =========================
      FUNCIÓN IMAGEN SEGURA
@@ -207,14 +226,19 @@ export function AdminProducts() {
               onChange={e => setNombre(e.target.value)}
               className="border p-2 rounded"
             />
+<input
+  placeholder="Precio"
+  value={precio}
+  onChange={(e) => {
+    const value = e.target.value;
 
-            <input
-              placeholder="Precio"
-              value={precio}
-              onChange={e => setPrecio(e.target.value)}
-              className="border p-2 rounded"
-            />
-
+    // solo números y punto decimal
+    if (/^\d*\.?\d*$/.test(value)) {
+      setPrecio(value);
+    }
+  }}
+  className="border p-2 rounded"
+/>
             <select
               value={categoria}
               onChange={e => setCategoria(e.target.value)}
@@ -317,12 +341,17 @@ export function AdminProducts() {
             <h3 className="text-lg font-bold mb-3">Editar Producto</h3>
 
             <input
-              value={editando.nombre}
-              onChange={(e) =>
-                setEditando({ ...editando, nombre: e.target.value })
-              }
-              className="border p-2 mb-2 w-full rounded"
-            />
+  value={editando.nombre}
+  onChange={(e) => {
+    const value = e.target.value;
+
+    // solo letras, espacios, acentos y ñ
+    if (/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/.test(value)) {
+      setEditando({ ...editando, nombre: value });
+    }
+  }}
+  className="border p-2 mb-2 w-full rounded"
+/>
 
             <input
               value={editando.precio}

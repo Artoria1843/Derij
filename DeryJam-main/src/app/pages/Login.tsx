@@ -43,6 +43,7 @@ export function Login() {
       });
 
       const data = await res.json();
+      console.log(data.user);
 
       if (!res.ok) {
         setError(data.message || "Error al iniciar sesión");
@@ -54,7 +55,12 @@ export function Login() {
       localStorage.setItem("user", JSON.stringify(data.user));
 
       alert("¡Inicio de sesión exitoso!");
-     window.location.href = "/";
+     // SI ES ADMIN
+if (data.user.rol === 1) {
+  window.location.href = "/admin";
+} else {
+  window.location.href = "/";
+}
 
     } catch (err) {
       setError("Error de conexión con el servidor");

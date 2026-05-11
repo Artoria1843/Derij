@@ -10,7 +10,7 @@ import checkoutRoutes from "./routes/checkout.js";
 import registroRoutes from "./routes/registro.js";
 import loginRoutes from "./routes/login.js";
 
-
+import usuariosRoutes from "./routes/usuarios.js";
 const app = express();
 
 // ==============================
@@ -35,7 +35,7 @@ db.connect((err) => {
   else console.log("BD CONECTADA");
 });
 
-// 🔥 PASAR BD A TODAS LAS RUTAS
+//  PASAR BD A TODAS LAS RUTAS
 app.use((req, res, next) => {
   req.db = db;
   next();
@@ -48,7 +48,7 @@ app.use("/carrito", carritoRoutes);
 app.use("/checkout", checkoutRoutes);
 app.use("/registro", registroRoutes);
 app.use("/login", loginRoutes);
-
+app.use("/usuarios", usuariosRoutes);
 // ==============================
 // ADMIN MIDDLEWARE
 // ==============================
@@ -84,6 +84,7 @@ app.get("/productos", (req, res) => {
       p.Precio AS precio,
       p.Imagen AS imagen,
       p.Descripcion AS descripcion,
+      p.Id_categoria AS Id_categoria,
       c.Nombre AS categoria
     FROM producto p
     INNER JOIN categoria c ON p.Id_categoria = c.Id_categoria
@@ -95,9 +96,78 @@ app.get("/productos", (req, res) => {
   });
 });
 
+// ==============================
+// ACTUALIZAR PRODUCTO (SOLO FIX SEGURIDAD)
+// ==============================
+app.put(
+
+  
+  "/productos/:id",
+  verificarAdmin,
+  upload.single("imagen"),
+  (req, res) => {
+
+    const { nombre, precio, Id_categoria, descripcion } = req.body;
+    const id = req.params.id;
+
+    let sql;
+    let values;
+
+    if (req.file) {
+      const imagen = `/uploads/${req.file.filename}`;
+
+      sql = `
+        UPDATE producto
+        SET Nombre=?, Precio=?, Id_categoria=?, Imagen=?, Descripcion=?
+        WHERE Id_producto=?
+      `;
+
+      values = [
+        nombre || "",
+        precio || 0,
+        Id_categoria || null,
+        imagen,
+        descripcion || "",
+        id
+      ];
+
+    } else {
+
+      sql = `
+        UPDATE producto
+        SET Nombre=?, Precio=?, Id_categoria=?, Descripcion=?
+        WHERE Id_producto=?
+      `;
+
+      values = [
+        nombre || "",
+        precio || 0,
+        Id_categoria || null,
+        descripcion || "",
+        id
+      ];
+    }
+
+    db.query(sql, values, (err) => {
+      if (err) return res.status(500).json(err);
+      res.json({ mensaje: "Producto actualizado" });
+    });
+  }
+);
 // CREAR PRODUCTO
 app.post("/productos", verificarAdmin, upload.single("imagen"), (req, res) => {
+
   const { nombre, precio, Id_categoria, descripcion } = req.body;
+
+  const precioNum = Number(precio);
+  const categoriaNum = Number(Id_categoria);
+
+  // 🔥 VALIDACIÓN (AQUÍ ES DONDE VA)
+  if (!nombre || isNaN(precioNum) || isNaN(categoriaNum)) {
+    return res.status(400).json({
+      error: "Datos inválidos (nombre, precio o categoría incorrectos)"
+    });
+  }
 
   if (!req.file) {
     return res.status(400).json({ error: "Imagen requerida" });
@@ -107,7 +177,7 @@ app.post("/productos", verificarAdmin, upload.single("imagen"), (req, res) => {
 
   db.query(
     "INSERT INTO producto (Nombre, Precio, Id_categoria, Imagen, Descripcion) VALUES (?, ?, ?, ?, ?)",
-    [nombre, precio, Id_categoria, imagen, descripcion || ""],
+    [nombre, precioNum, categoriaNum, imagen, descripcion || ""],
     (err) => {
       if (err) return res.status(500).json(err);
       res.json({ mensaje: "Producto creado" });

@@ -2,10 +2,9 @@ import express from "express";
 
 const router = express.Router();
 
-// ==============================
 // OBTENER USUARIOS
-// ==============================
 router.get("/", (req, res) => {
+
   const db = req.db;
 
   const sql = `
@@ -18,6 +17,7 @@ router.get("/", (req, res) => {
   `;
 
   db.query(sql, (err, result) => {
+
     if (err) {
       console.log("ERROR USUARIOS:", err);
       return res.status(500).json(err);
@@ -27,29 +27,32 @@ router.get("/", (req, res) => {
   });
 });
 
-// ==============================
 // ELIMINAR USUARIO
-// ==============================
 router.delete("/:id", (req, res) => {
+
   const db = req.db;
 
   const rol = req.headers["rol"];
 
-  // 🔥 PROTECCIÓN ADMIN
   if (rol != 1) {
-    return res.status(403).json({ error: "No autorizado" });
+    return res.status(403).json({
+      error: "No autorizado"
+    });
   }
 
   db.query(
     "DELETE FROM usuario WHERE Id_usuario = ?",
     [req.params.id],
     (err) => {
+
       if (err) {
         console.log("ERROR ELIMINAR:", err);
         return res.status(500).json(err);
       }
 
-      res.json({ mensaje: "Usuario eliminado" });
+      res.json({
+        mensaje: "Usuario eliminado"
+      });
     }
   );
 });

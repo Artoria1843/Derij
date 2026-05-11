@@ -2,8 +2,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 export function AdminCategories() {
+
   const [nombre, setNombre] = useState("");
   const [categorias, setCategorias] = useState<any[]>([]);
+
+  // USUARIO LOGUEADO
+  const user = JSON.parse(
+    localStorage.getItem("user") || "{}"
+  );
 
   /* =========================
         CARGAR CATEGORÍAS
@@ -13,43 +19,103 @@ export function AdminCategories() {
   }, []);
 
   const cargarCategorias = async () => {
+
     try {
-      const res = await axios.get("http://localhost:3001/categorias");
-      setCategorias(Array.isArray(res.data) ? res.data : []);
+
+      const res = await axios.get(
+        "http://localhost:3001/categorias"
+      );
+
+      setCategorias(
+        Array.isArray(res.data)
+          ? res.data
+          : []
+      );
+
     } catch (error) {
-      console.log("Error cargando categorías:", error);
+
+      console.log(
+        "Error cargando categorías:",
+        error
+      );
     }
   };
 
   /* =========================
         CREAR CATEGORÍA
   ========================= */
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
+
     e.preventDefault();
 
-    console.log("🔥 ENTRO AL SUBMIT"); // DEBUG
-
-    if (!nombre) return alert("Escribe un nombre");
+   if (!nombre || nombre.trim().length < 3) {
+  alert("Nombre demasiado corto");
+  return;
+}
 
     try {
-      await axios.post("http://localhost:3001/categorias", { nombre });
+
+      await axios.post(
+        "http://localhost:3001/categorias",
+        {
+          nombre,
+        },
+        {
+          headers: {
+            rol: user.rol,
+          },
+        }
+      );
 
       setNombre("");
+
       cargarCategorias();
+
+      alert("Categoría creada");
+
     } catch (error) {
-      console.log("Error creando categoría:", error);
+
+      console.log(
+        "Error creando categoría:",
+        error
+      );
+
+      alert("No autorizado");
     }
   };
 
   /* =========================
         ELIMINAR
   ========================= */
-  const eliminar = async (id: number) => {
+  const eliminar = async (
+    id: number
+  ) => {
+
     try {
-      await axios.delete(`http://localhost:3001/categorias/${id}`);
+
+      await axios.delete(
+        `http://localhost:3001/categorias/${id}`,
+        {
+          headers: {
+            rol: user.rol,
+          },
+        }
+      );
+
       cargarCategorias();
+
+      alert("Categoría eliminada");
+
     } catch (error) {
-      console.log("Error eliminando:", error);
+
+      console.log(
+        "Error eliminando:",
+        error
+      );
+
+      alert("No autorizado");
     }
   };
 
@@ -58,23 +124,34 @@ export function AdminCategories() {
 
       <div className="max-w-xl mx-auto bg-white p-6 rounded shadow">
 
-        <h2 className="text-2xl mb-4">Categorías</h2>
+        <h2 className="text-2xl mb-4">
+          Categorías
+        </h2>
 
         {/* FORM */}
-        <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
+        <form
+          onSubmit={handleSubmit}
+          className="flex gap-2 mb-4"
+        >
 
           <input
             type="text"
             placeholder="Nombre categoría"
             value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-            className="border p-2 flex-1"
+            onChange={(e) => {
+  const value = e.target.value;
+
+  //  solo letras, espacios, ñ y acentos
+  if (/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/.test(value)) {
+    setNombre(value);
+  }
+}}
+            className="border p-2 flex-1 rounded"
           />
 
-          {/* 🔥 FIX IMPORTANTE */}
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4"
+            className="bg-blue-600 text-white px-4 rounded"
           >
             Guardar
           </button>
@@ -87,16 +164,22 @@ export function AdminCategories() {
           {categorias.map((c) => (
             <div
               key={c.Id_categoria}
-              className="flex justify-between items-center bg-gray-50 p-2 rounded"
+              className="flex justify-between items-center bg-gray-50 p-3 rounded"
             >
-              <span>{c.Nombre}</span>
+
+              <span>
+                {c.Nombre}
+              </span>
 
               <button
-                onClick={() => eliminar(c.Id_categoria)}
-                className="bg-red-600 text-white px-3 py-1"
+                onClick={() =>
+                  eliminar(c.Id_categoria)
+                }
+                className="bg-red-600 text-white px-3 py-1 rounded"
               >
                 Eliminar
               </button>
+
             </div>
           ))}
 
