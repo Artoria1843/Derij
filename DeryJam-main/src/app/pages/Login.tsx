@@ -158,17 +158,8 @@ if (data.user.rol === 1) {
                 INICIAR SESIÓN
               </button>
 
-              {/* SOCIAL */}
-              <div className="my-6 flex items-center">
-                <div className="flex-grow h-px bg-gray-300"></div>
-                <span className="px-3 text-gray-500 text-sm">O continúa con</span>
-                <div className="flex-grow h-px bg-gray-300"></div>
-              </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <button className="border rounded-xl py-2">Google</button>
-                <button className="border rounded-xl py-2">Facebook</button>
-              </div>
+
             </form>
 
             <p className="text-center mt-6 text-sm">
