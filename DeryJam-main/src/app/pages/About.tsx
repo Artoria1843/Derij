@@ -95,7 +95,7 @@ export function About() {
             <p
               style={{
                 marginBottom: "20px",
-                lineHeight: "2",
+                lineHeight: "1.7",
                 textAlign: "justify",
                 fontSize: "19px",
                 color: "#333",
@@ -109,7 +109,7 @@ export function About() {
             <p
               style={{
                 marginBottom: "20px",
-                lineHeight: "2",
+                lineHeight: "1.7",
                 textAlign: "justify",
                 fontSize: "19px",
                 color: "#333",
@@ -123,7 +123,7 @@ export function About() {
             <p
               style={{
                 marginBottom: "20px",
-                lineHeight: "2",
+                lineHeight: "1.7",
                 textAlign: "justify",
                 fontSize: "19px",
                 color: "#333",
@@ -135,7 +135,7 @@ export function About() {
 
             <p
               style={{
-                lineHeight: "2",
+                lineHeight: "1.7",
                 textAlign: "justify",
                 fontSize: "19px",
                 color: "#333",
