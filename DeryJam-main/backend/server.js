@@ -209,3 +209,45 @@ app.delete("/categorias/:id", verificarAdmin, (req, res) => {
 app.listen(3001, () => {
   console.log("Servidor corriendo en http://localhost:3001");
 });
+
+// ==============================
+// CONTACTOS
+// ==============================
+
+app.post("/contacto", (req, res) => {
+
+  const {
+    nombre,
+    email,
+    telefono,
+    asunto,
+    mensaje
+  } = req.body;
+
+  const sql = `
+    INSERT INTO contactos
+    (nombre, email, telefono, asunto, mensaje)
+    VALUES (?, ?, ?, ?, ?)
+  `;
+
+  db.query(
+    sql,
+    [nombre, email, telefono, asunto, mensaje],
+    (err, result) => {
+
+      if (err) {
+        console.log(err);
+
+        return res.status(500).json({
+          error: "Error al guardar contacto"
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "Mensaje guardado correctamente"
+      });
+
+    }
+  );
+});
