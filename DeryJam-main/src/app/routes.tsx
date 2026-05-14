@@ -18,7 +18,7 @@ import { AdminProducts } from "./pages/Admin/AdminProducts";
 import { AdminPanel } from "./pages/Admin/AdminPanel";
 import { AdminCategories } from "./pages/Admin/AdminCategories";
 import { Usuarios } from "./pages/Admin/Usuarios";
-
+import { Inventario } from "./pages/Admin/Inventario";
 // Routes protect
 import { AdminRoute } from "./pages/AdminRoute";
 import { ClientRoute } from "./pages/ClientRoute";
@@ -74,6 +74,10 @@ export const router = createBrowserRouter([
             path: "admin/usuarios",
             Component: Usuarios,
           },
+          {
+  path: "admin/inventario",
+  Component: Inventario,
+},
         ],
       },
     ],

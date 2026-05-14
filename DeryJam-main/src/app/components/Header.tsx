@@ -45,6 +45,10 @@ export function Header() {
             path: "/admin/usuarios",
             label: "Usuarios",
           },
+          {
+            path: "/admin/inventario",
+            label: "Inventario",
+          },
         ]
       : [
           {
