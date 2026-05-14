@@ -11,6 +11,7 @@ import registroRoutes from "./routes/registro.js";
 import loginRoutes from "./routes/login.js";
 
 import usuariosRoutes from "./routes/usuarios.js";
+
 const app = express();
 
 // ==============================
@@ -21,7 +22,7 @@ app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
 // ==============================
-// CONEXIÓN BD (SE QUEDA AQUÍ)
+// CONEXIÓN BD
 // ==============================
 const db = mysql.createConnection({
   host: "localhost",
@@ -35,7 +36,9 @@ db.connect((err) => {
   else console.log("BD CONECTADA");
 });
 
-//  PASAR BD A TODAS LAS RUTAS
+// ==============================
+// PASAR BD A RUTAS
+// ==============================
 app.use((req, res, next) => {
   req.db = db;
   next();
@@ -49,26 +52,36 @@ app.use("/checkout", checkoutRoutes);
 app.use("/registro", registroRoutes);
 app.use("/login", loginRoutes);
 app.use("/usuarios", usuariosRoutes);
+
 // ==============================
 // ADMIN MIDDLEWARE
 // ==============================
 function verificarAdmin(req, res, next) {
+
   const rol = req.headers["rol"];
 
   if (rol != 1) {
-    return res.status(403).json({ error: "No autorizado" });
+    return res.status(403).json({
+      error: "No autorizado"
+    });
   }
 
   next();
 }
 
 // ==============================
-// MULTER (IMÁGENES)
+// MULTER
 // ==============================
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/"),
-  filename: (req, file, cb) =>
-    cb(null, Date.now() + "-" + file.originalname),
+
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+
 });
 
 const upload = multer({ storage });
@@ -76,7 +89,10 @@ const upload = multer({ storage });
 // ==============================
 // PRODUCTOS
 // ==============================
+
+// OBTENER PRODUCTOS
 app.get("/productos", (req, res) => {
+
   const sql = `
     SELECT 
       p.Id_producto AS id,
@@ -85,40 +101,169 @@ app.get("/productos", (req, res) => {
       p.Imagen AS imagen,
       p.Descripcion AS descripcion,
       p.Id_categoria AS Id_categoria,
+      i.Stock AS stock,
       c.Nombre AS categoria
     FROM producto p
-    INNER JOIN categoria c ON p.Id_categoria = c.Id_categoria
+    INNER JOIN categoria c 
+      ON p.Id_categoria = c.Id_categoria
+    LEFT JOIN inventario i
+      ON p.Id_producto = i.Id_producto
   `;
 
   db.query(sql, (err, result) => {
-    if (err) return res.status(500).json(err);
+
+    if (err) {
+      return res.status(500).json(err);
+    }
+
     res.json(result);
+
   });
 });
 
 // ==============================
-// ACTUALIZAR PRODUCTO (SOLO FIX SEGURIDAD)
+// CREAR PRODUCTO
+// ==============================
+app.post(
+  "/productos",
+  verificarAdmin,
+  upload.single("imagen"),
+  (req, res) => {
+
+    const {
+      nombre,
+      precio,
+      Id_categoria,
+      descripcion,
+      stock
+    } = req.body;
+
+    const precioNum = Number(precio);
+    const categoriaNum = Number(Id_categoria);
+    const stockNum = Number(stock);
+
+    // VALIDACIONES
+    if (
+      !nombre ||
+      isNaN(precioNum) ||
+      isNaN(categoriaNum)
+    ) {
+      return res.status(400).json({
+        error: "Datos inválidos"
+      });
+    }
+
+    if (isNaN(stockNum)) {
+      return res.status(400).json({
+        error: "Stock inválido"
+      });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({
+        error: "Imagen requerida"
+      });
+    }
+
+    const imagen = `/uploads/${req.file.filename}`;
+
+    // INSERTAR PRODUCTO
+    const sqlProducto = `
+      INSERT INTO producto
+      (
+        Nombre,
+        Precio,
+        Id_categoria,
+        Imagen,
+        Descripcion,
+        Stock
+      )
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+    db.query(
+      sqlProducto,
+      [
+        nombre,
+        precioNum,
+        categoriaNum,
+        imagen,
+        descripcion || "",
+        stockNum
+      ],
+      (err, result) => {
+
+        if (err) {
+          return res.status(500).json(err);
+        }
+
+        const idProducto = result.insertId;
+
+        // INSERTAR INVENTARIO
+        db.query(
+          `
+            INSERT INTO inventario
+            (
+              Id_producto,
+              Stock
+            )
+            VALUES (?, ?)
+          `,
+          [idProducto, stockNum],
+          (err2) => {
+
+            if (err2) {
+              return res.status(500).json(err2);
+            }
+
+            res.json({
+              mensaje: "Producto creado"
+            });
+
+          }
+        );
+
+      }
+    );
+  }
+);
+
+// ==============================
+// ACTUALIZAR PRODUCTO
 // ==============================
 app.put(
-
-  
   "/productos/:id",
   verificarAdmin,
   upload.single("imagen"),
   (req, res) => {
 
-    const { nombre, precio, Id_categoria, descripcion } = req.body;
+    const {
+      nombre,
+      precio,
+      Id_categoria,
+      descripcion,
+      stock
+    } = req.body;
+
     const id = req.params.id;
 
     let sql;
     let values;
 
+    // CON IMAGEN
     if (req.file) {
+
       const imagen = `/uploads/${req.file.filename}`;
 
       sql = `
         UPDATE producto
-        SET Nombre=?, Precio=?, Id_categoria=?, Imagen=?, Descripcion=?
+        SET
+          Nombre=?,
+          Precio=?,
+          Id_categoria=?,
+          Imagen=?,
+          Descripcion=?,
+          Stock=?
         WHERE Id_producto=?
       `;
 
@@ -128,14 +273,21 @@ app.put(
         Id_categoria || null,
         imagen,
         descripcion || "",
+        stock || 0,
         id
       ];
 
     } else {
 
+      // SIN IMAGEN
       sql = `
         UPDATE producto
-        SET Nombre=?, Precio=?, Id_categoria=?, Descripcion=?
+        SET
+          Nombre=?,
+          Precio=?,
+          Id_categoria=?,
+          Descripcion=?,
+          Stock=?
         WHERE Id_producto=?
       `;
 
@@ -144,146 +296,146 @@ app.put(
         precio || 0,
         Id_categoria || null,
         descripcion || "",
+        stock || 0,
         id
       ];
     }
 
     db.query(sql, values, (err) => {
-      if (err) return res.status(500).json(err);
-      res.json({ mensaje: "Producto actualizado" });
+
+      if (err) {
+        return res.status(500).json(err);
+      }
+
+      // ACTUALIZAR INVENTARIO
+      db.query(
+        `
+          UPDATE inventario
+          SET Stock=?
+          WHERE Id_producto=?
+        `,
+        [stock || 0, id],
+        (err2) => {
+
+          if (err2) {
+            return res.status(500).json(err2);
+          }
+
+          res.json({
+            mensaje: "Producto actualizado"
+          });
+
+        }
+      );
+
     });
   }
 );
-// CREAR PRODUCTO
-app.post("/productos", verificarAdmin, upload.single("imagen"), (req, res) => {
 
-  const { nombre, precio, Id_categoria, descripcion } = req.body;
-
-  const precioNum = Number(precio);
-  const categoriaNum = Number(Id_categoria);
-
-  // 🔥 VALIDACIÓN (AQUÍ ES DONDE VA)
-  if (!nombre || isNaN(precioNum) || isNaN(categoriaNum)) {
-    return res.status(400).json({
-      error: "Datos inválidos (nombre, precio o categoría incorrectos)"
-    });
-  }
-
-  if (!req.file) {
-    return res.status(400).json({ error: "Imagen requerida" });
-  }
-
-  const imagen = `/uploads/${req.file.filename}`;
-
-  db.query(
-    "INSERT INTO producto (Nombre, Precio, Id_categoria, Imagen, Descripcion) VALUES (?, ?, ?, ?, ?)",
-    [nombre, precioNum, categoriaNum, imagen, descripcion || ""],
-    (err) => {
-      if (err) return res.status(500).json(err);
-      res.json({ mensaje: "Producto creado" });
-    }
-  );
-});
-
-// ACTUALIZAR PRODUCTO
-app.put(
+// ==============================
+// ELIMINAR PRODUCTO
+// ==============================
+app.delete(
   "/productos/:id",
   verificarAdmin,
-  upload.single("imagen"),
   (req, res) => {
-    const { nombre, precio, Id_categoria, descripcion } = req.body;
-    const id = req.params.id;
 
-    let sql;
-    let values;
+    db.query(
+      "DELETE FROM producto WHERE Id_producto=?",
+      [req.params.id],
+      (err) => {
 
-    if (req.file) {
-      const imagen = `/uploads/${req.file.filename}`;
+        if (err) {
+          return res.status(500).json(err);
+        }
 
-      sql = `
-        UPDATE producto
-        SET Nombre=?, Precio=?, Id_categoria=?, Imagen=?, Descripcion=?
-        WHERE Id_producto=?
-      `;
+        res.json({
+          mensaje: "Producto eliminado"
+        });
 
-      values = [nombre, precio, Id_categoria, imagen, descripcion || "", id];
-    } else {
-      sql = `
-        UPDATE producto
-        SET Nombre=?, Precio=?, Id_categoria=?, Descripcion=?
-        WHERE Id_producto=?
-      `;
+      }
+    );
 
-      values = [nombre, precio, Id_categoria, descripcion || "", id];
-    }
-
-    db.query(sql, values, (err) => {
-      if (err) return res.status(500).json(err);
-      res.json({ mensaje: "Producto actualizado" });
-    });
   }
 );
-
-// ELIMINAR PRODUCTO
-app.delete("/productos/:id", verificarAdmin, (req, res) => {
-  db.query(
-    "DELETE FROM producto WHERE Id_producto = ?",
-    [req.params.id],
-    (err) => {
-      if (err) return res.status(500).json(err);
-      res.json({ mensaje: "Producto eliminado" });
-    }
-  );
-});
 
 // ==============================
 // CATEGORÍAS
 // ==============================
+
+// OBTENER
 app.get("/categorias", (req, res) => {
+
   db.query(
-    "SELECT * FROM categoria WHERE Estado = 'activo'",
+    "SELECT * FROM categoria WHERE Estado='activo'",
     (err, result) => {
-      if (err) return res.status(500).json(err);
+
+      if (err) {
+        return res.status(500).json(err);
+      }
+
       res.json(result);
+
     }
   );
 });
 
+// CREAR
 app.post("/categorias", verificarAdmin, (req, res) => {
+
   const { nombre } = req.body;
 
   db.query(
-    "INSERT INTO categoria (Nombre, Estado) VALUES (?, 'activo')",
+    `
+      INSERT INTO categoria
+      (
+        Nombre,
+        Estado
+      )
+      VALUES (?, 'activo')
+    `,
     [nombre],
     (err) => {
-      if (err) return res.status(500).json(err);
-      res.json({ mensaje: "Categoría creada" });
+
+      if (err) {
+        return res.status(500).json(err);
+      }
+
+      res.json({
+        mensaje: "Categoría creada"
+      });
+
     }
   );
 });
 
+// ELIMINAR
 app.delete("/categorias/:id", verificarAdmin, (req, res) => {
+
   db.query(
-    "UPDATE categoria SET Estado='inactivo' WHERE Id_categoria=?",
+    `
+      UPDATE categoria
+      SET Estado='inactivo'
+      WHERE Id_categoria=?
+    `,
     [req.params.id],
     (err) => {
-      if (err) return res.status(500).json(err);
-      res.json({ mensaje: "Categoría desactivada" });
+
+      if (err) {
+        return res.status(500).json(err);
+      }
+
+      res.json({
+        mensaje: "Categoría desactivada"
+      });
+
     }
   );
-});
-
-// ==============================
-// SERVIDOR
-// ==============================
-app.listen(3001, () => {
-  console.log("Servidor corriendo en http://localhost:3001");
 });
 
 // ==============================
 // CONTACTOS
 // ==============================
-
 app.post("/contacto", (req, res) => {
 
   const {
@@ -296,16 +448,29 @@ app.post("/contacto", (req, res) => {
 
   const sql = `
     INSERT INTO contactos
-    (nombre, email, telefono, asunto, mensaje)
+    (
+      nombre,
+      email,
+      telefono,
+      asunto,
+      mensaje
+    )
     VALUES (?, ?, ?, ?, ?)
   `;
 
   db.query(
     sql,
-    [nombre, email, telefono, asunto, mensaje],
-    (err, result) => {
+    [
+      nombre,
+      email,
+      telefono,
+      asunto,
+      mensaje
+    ],
+    (err) => {
 
       if (err) {
+
         console.log(err);
 
         return res.status(500).json({
@@ -319,5 +484,14 @@ app.post("/contacto", (req, res) => {
       });
 
     }
+  );
+});
+
+// ==============================
+// SERVIDOR
+// ==============================
+app.listen(3001, () => {
+  console.log(
+    "Servidor corriendo en http://localhost:3001"
   );
 });
