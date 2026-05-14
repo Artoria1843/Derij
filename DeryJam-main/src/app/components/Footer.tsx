@@ -58,7 +58,7 @@ export function Footer() {
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 mt-1 flex-shrink-0" />
-                <span>Ciudad de México, México</span>
+                <span>Francisco Javier Mina 1305, El Cantaro, 39960 San Marcos, Gro.</span>
               </li>
             </ul>
           </div>
@@ -68,14 +68,19 @@ export function Footer() {
             <h3 className="font-semibold mb-4 text-white">Síguenos</h3>
             <div className="flex gap-4">
               <a
-                href="#"
+                href="https://www.facebook.com/share/1XkpFDVGzc/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="bg-black/30 p-2 rounded-full hover:bg-black/40 transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook className="h-5 w-5" />
               </a>
+
               <a
-                href="#"
+                href="https://www.instagram.com/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="bg-black/30 p-2 rounded-full hover:bg-black/40 transition-colors"
                 aria-label="Instagram"
               >
