@@ -29,14 +29,13 @@ export function Home() {
   // CARRITO
   // =========================
   const handleAddToCart = (product: any) => {
-    addToCart({
-      id: product.id,
-      nombre: product.nombre,
-      categoria: product.categoria,
-      precio: product.precio,
-      imagen: product.imagen,
-      descripcion: product.descripcion,
-    });
+            handleAddToCart({
+              id: product.id,
+              nombre: product.nombre,
+              categoria: product.categoria,
+              precio: product.precio,
+              imagen: product.imagen
+            })
 
     toast.success(`${product.nombre} agregado al carrito`);
   };

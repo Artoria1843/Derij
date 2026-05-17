@@ -488,6 +488,61 @@ app.post("/contacto", (req, res) => {
 });
 
 // ==============================
+// VENTAS / ENVÍOS
+// ==============================
+
+// GET — todas las ventas con datos de usuario y dirección
+app.get("/ventas", verificarAdmin, (req, res) => {
+  const sql = `
+    SELECT 
+      v.Id_venta,
+      v.Total,
+      v.Estado,
+      v.Estado_envio,
+      v.Fecha,
+      u.Nombre AS nombre_usuario,
+      u.Email AS email_usuario,
+      u.Telefono AS telefono_usuario,
+      d.Calle, d.Numero, d.Colonia,
+      d.Ciudad, d.Estado AS estado_direccion,
+      d.Codigo_postal, d.Referencias
+    FROM venta v
+    INNER JOIN usuario u ON v.Id_usuario = u.Id_usuario
+    LEFT JOIN direccion d ON v.Id_direccion = d.Id_direccion
+    ORDER BY v.Fecha DESC
+  `;
+
+  db.query(sql, (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
+});
+
+// PUT — marcar envío como entregado
+app.put("/ventas/:id/entregado", verificarAdmin, (req, res) => {
+  db.query(
+    "UPDATE venta SET Estado_envio = 'entregado' WHERE Id_venta = ?",
+    [req.params.id],
+    (err) => {
+      if (err) return res.status(500).json(err);
+      res.json({ mensaje: "Envío marcado como entregado" });
+    }
+  );
+});
+
+// PUT — marcar pago como pagado
+app.put("/ventas/:id/pagado", verificarAdmin, (req, res) => {
+  db.query(
+    "UPDATE venta SET Estado = 'pagado' WHERE Id_venta = ?",
+    [req.params.id],
+    (err) => {
+      if (err) return res.status(500).json(err);
+      res.json({ mensaje: "Pago confirmado" });
+    }
+  );
+});
+
+// ==============================
 // SERVIDOR
 // ==============================
 app.listen(3001, () => {

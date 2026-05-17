@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { CreditCard, Truck, CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { Truck, CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import axios from "axios";
-type CheckoutStep = "cart" | "shipping" | "payment" | "confirmation";
+
+type CheckoutStep = "cart" | "shipping" | "confirmation";
 
 export function Checkout() {
   const navigate = useNavigate();
@@ -13,99 +14,75 @@ export function Checkout() {
   const [currentStep, setCurrentStep] = useState<CheckoutStep>("cart");
   const [orderNumber, setOrderNumber] = useState("");
   const [orderTotal, setOrderTotal] = useState(0);
-
   const [confirmedShipping, setConfirmedShipping] = useState<any>(null);
-  const [confirmedPaymentMethod] = useState("Tarjeta de Crédito / Débito");
 
   const [shippingData, setShippingData] = useState({
     fullName: "",
     email: "",
     phone: "",
     address: "",
+    number: "",
+    colonia: "",
     city: "",
     state: "",
     postalCode: "",
     notes: ""
   });
 
-  const [paymentData, setPaymentData] = useState({
-    cardName: "",
-    cardNumber: "",
-    expiryDate: "",
-    cvv: ""
-  });
-
   const subtotal = getTotalPrice();
-  const shipping = 0;
-  const tax = 0;
-  const total = subtotal + shipping + tax;
+  const total = subtotal;
 
   const handleShippingChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setShippingData({
-      ...shippingData,
-      [e.target.name]: e.target.value
-    });
+    setShippingData({ ...shippingData, [e.target.name]: e.target.value });
   };
 
-  const handlePaymentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPaymentData({
-      ...paymentData,
-      [e.target.name]: e.target.value
-    });
+  const handleShippingSubmit = async () => {
+    if (
+      !shippingData.fullName.trim() ||
+      !shippingData.email.trim() ||
+      !shippingData.phone.trim() ||
+      !shippingData.address.trim() ||
+      !shippingData.number.trim() ||
+      !shippingData.colonia.trim() ||
+      !shippingData.city.trim() ||
+      !shippingData.state.trim() ||
+      !shippingData.postalCode.trim()
+    ) {
+      alert("Por favor completa todos los campos obligatorios (*)");
+      return;
+    }
+
+    const raw = localStorage.getItem("user");
+    const user = raw ? JSON.parse(raw) : null;
+
+    if (!user) {
+      alert("Debes iniciar sesión para completar la compra.");
+      return;
+    }
+
+    try {
+      const res = await axios.post("http://localhost:3001/checkout", {
+        userId: user.id,
+        shippingData,
+        items: items.map((i) => ({
+          id: i.id,
+          quantity: i.quantity,
+          price: i.price
+        })),
+        total
+      });
+
+      setOrderNumber(res.data.numeroOrden);
+      setOrderTotal(total);
+      setConfirmedShipping({ ...shippingData });
+      clearCart();
+      setCurrentStep("confirmation");
+    } catch (err: any) {
+      alert(err.response?.data?.msg || "Error al procesar la compra");
+    }
   };
 
-const handleShippingSubmit = () => {
-  if (
-    !shippingData.fullName.trim() ||
-    !shippingData.email.trim() ||
-    !shippingData.phone.trim() ||
-    !shippingData.address.trim() ||
-    !shippingData.city.trim() ||
-    !shippingData.state.trim() ||
-    !shippingData.postalCode.trim()
-  ) {
-    alert("Por favor completa todos los campos obligatorios (*)");
-    return;
-  }
-
-  setCurrentStep("payment");
-};
-
-const handlePaymentSubmit = async () => {
-  const raw = localStorage.getItem("user");
-  const user = raw ? JSON.parse(raw) : null;
-
-  if (!user) {
-    alert("Debes iniciar sesión para completar la compra.");
-    return;
-  }
-
-  try {
-    const res = await axios.post("http://localhost:3001/checkout", {
-      userId: user.id,
-      shippingData,
-      items: items.map((i) => ({
-        id: i.id,
-        quantity: i.quantity,
-        price: i.price
-      })),
-      total
-    });
-
-    setOrderNumber(res.data.numeroOrden);
-    setOrderTotal(total);
-    setConfirmedShipping({ ...shippingData });
-
-    clearCart();
-    setCurrentStep("confirmation");
-  } catch (err: any) {
-    alert(err.response?.data?.msg || "Error al procesar la compra");
-  }
-};
-
-  const handleFinish = () => {
-    navigate("/");
-  };
+  const handleFinish = () => navigate("/");
 
   if (items.length === 0 && currentStep !== "confirmation") {
     return (
@@ -114,7 +91,7 @@ const handlePaymentSubmit = async () => {
           <h2 className="text-2xl mb-4 text-black">Tu carrito está vacío</h2>
           <button
             onClick={() => navigate("/productos")}
-            className="bg-[#89030f] hover:bg-[#6e020a] text-white px-6 py-3 rounded-lg transition-colors shadow-md"
+            className="bg-[#89030f] hover:bg-[#6e020a] active:scale-95 transition-transform text-white px-6 py-3 rounded-lg shadow-md"
           >
             Ver Productos
           </button>
@@ -126,7 +103,6 @@ const handlePaymentSubmit = async () => {
   const steps = [
     { id: "cart", label: "Carrito", icon: "🛒" },
     { id: "shipping", label: "Envío", icon: "📦" },
-    { id: "payment", label: "Pago", icon: "💳" },
     { id: "confirmation", label: "Confirmación", icon: "✅" }
   ];
 
@@ -142,30 +118,24 @@ const handlePaymentSubmit = async () => {
             {steps.map((step, index) => (
               <div key={step.id} className="flex items-center flex-1">
                 <div className="flex flex-col items-center flex-1">
-                  <div
-                    className={`w-12 h-12 rounded-full flex items-center justify-center text-xl mb-2 ${
-                      index <= currentStepIndex
-                        ? "bg-emerald-600 text-white"
-                        : "bg-gray-200 text-gray-500"
-                    }`}
-                  >
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl mb-2 ${
+                    index <= currentStepIndex ? "bg-emerald-600 text-white" : "bg-gray-200 text-gray-500"
+                  }`}>
                     {step.icon}
                   </div>
                   <span className="text-sm text-black">{step.label}</span>
                 </div>
                 {index < steps.length - 1 && (
-                  <div
-                    className={`h-1 flex-1 mx-2 ${
-                      index < currentStepIndex ? "bg-emerald-600" : "bg-gray-200"
-                    }`}
-                  />
+                  <div className={`h-1 flex-1 mx-2 ${
+                    index < currentStepIndex ? "bg-emerald-600" : "bg-gray-200"
+                  }`} />
                 )}
               </div>
             ))}
           </div>
         </div>
 
-        {/* CARRITO */}
+        {/* ── CARRITO ── */}
         {currentStep === "cart" && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
@@ -173,7 +143,10 @@ const handlePaymentSubmit = async () => {
                 <h2 className="text-2xl mb-6 text-black">Lista de Productos</h2>
                 <div className="space-y-4">
                   {items.map((item) => (
-                    <div key={item.id} className="flex gap-4 pb-4 border-b last:border-b-0">
+                    <div
+                      key={item.id}
+                      className="flex gap-4 pb-4 border-b last:border-b-0 hover:bg-gray-50 rounded-lg transition-colors p-2"
+                    >
                       <div className="w-24 h-24 flex-shrink-0 rounded overflow-hidden">
                         <ImageWithFallback
                           src={item.image}
@@ -187,14 +160,14 @@ const handlePaymentSubmit = async () => {
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className="p-1 bg-gray-100 rounded hover:bg-gray-200"
+                            className="p-1 bg-gray-100 rounded hover:bg-gray-200 active:scale-90 transition-transform"
                           >
                             -
                           </button>
                           <span className="w-8 text-center text-black">{item.quantity}</span>
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="p-1 bg-gray-100 rounded hover:bg-gray-200"
+                            className="p-1 bg-gray-100 rounded hover:bg-gray-200 active:scale-90 transition-transform"
                           >
                             +
                           </button>
@@ -203,7 +176,7 @@ const handlePaymentSubmit = async () => {
                       <div className="flex flex-col items-end gap-2">
                         <button
                           onClick={() => removeFromCart(item.id)}
-                          className="text-red-500 text-sm hover:text-red-700"
+                          className="text-red-500 text-sm hover:text-red-700 hover:scale-105 transition-transform"
                         >
                           Eliminar
                         </button>
@@ -232,7 +205,7 @@ const handlePaymentSubmit = async () => {
                 </div>
                 <button
                   onClick={() => setCurrentStep("shipping")}
-                  className="w-full bg-[#89030f] hover:bg-[#6e020a] text-white py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md"
+                  className="w-full bg-[#89030f] hover:bg-[#6e020a] active:scale-95 transition-transform text-white py-3 rounded-lg flex items-center justify-center gap-2 shadow-md"
                 >
                   Continuar al Envío <ChevronRight className="h-5 w-5" />
                 </button>
@@ -241,7 +214,7 @@ const handlePaymentSubmit = async () => {
           </div>
         )}
 
-        {/* ENVÍO */}
+        {/* ── ENVÍO ── */}
         {currentStep === "shipping" && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
@@ -252,17 +225,15 @@ const handlePaymentSubmit = async () => {
                 </div>
 
                 <div className="space-y-4">
-                  {/* Campos de envío (sin cambios) */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-gray-700 mb-2">Nombre Completo *</label>
                       <input
                         type="text"
                         name="fullName"
-                        required
                         value={shippingData.fullName}
                         onChange={handleShippingChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:scale-[1.01] transition-transform"
                         placeholder="Juan Pérez"
                       />
                     </div>
@@ -271,10 +242,9 @@ const handlePaymentSubmit = async () => {
                       <input
                         type="email"
                         name="email"
-                        required
                         value={shippingData.email}
                         onChange={handleShippingChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:scale-[1.01] transition-transform"
                         placeholder="tu@email.com"
                       />
                     </div>
@@ -285,25 +255,48 @@ const handlePaymentSubmit = async () => {
                     <input
                       type="tel"
                       name="phone"
-                      required
                       value={shippingData.phone}
                       onChange={handleShippingChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:scale-[1.01] transition-transform"
                       placeholder="(55) 1234 5678"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 mb-2">Dirección *</label>
+                    <label className="block text-gray-700 mb-2">Dirección (Calle) *</label>
                     <input
                       type="text"
                       name="address"
-                      required
                       value={shippingData.address}
                       onChange={handleShippingChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                      placeholder="Calle, número, colonia"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:scale-[1.01] transition-transform"
+                      placeholder="Nombre de la calle"
                     />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-gray-700 mb-2">Número *</label>
+                      <input
+                        type="text"
+                        name="number"
+                        value={shippingData.number}
+                        onChange={handleShippingChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:scale-[1.01] transition-transform"
+                        placeholder="Ej. 142"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 mb-2">Colonia *</label>
+                      <input
+                        type="text"
+                        name="colonia"
+                        value={shippingData.colonia}
+                        onChange={handleShippingChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:scale-[1.01] transition-transform"
+                        placeholder="Nombre de la colonia"
+                      />
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -312,10 +305,9 @@ const handlePaymentSubmit = async () => {
                       <input
                         type="text"
                         name="city"
-                        required
                         value={shippingData.city}
                         onChange={handleShippingChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:scale-[1.01] transition-transform"
                         placeholder="Ciudad"
                       />
                     </div>
@@ -324,10 +316,9 @@ const handlePaymentSubmit = async () => {
                       <input
                         type="text"
                         name="state"
-                        required
                         value={shippingData.state}
                         onChange={handleShippingChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:scale-[1.01] transition-transform"
                         placeholder="Estado"
                       />
                     </div>
@@ -336,10 +327,9 @@ const handlePaymentSubmit = async () => {
                       <input
                         type="text"
                         name="postalCode"
-                        required
                         value={shippingData.postalCode}
                         onChange={handleShippingChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:scale-[1.01] transition-transform"
                         placeholder="12345"
                       />
                     </div>
@@ -352,7 +342,7 @@ const handlePaymentSubmit = async () => {
                       rows={3}
                       value={shippingData.notes}
                       onChange={handleShippingChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:scale-[1.01] transition-transform resize-none"
                       placeholder="Referencias, instrucciones especiales, etc."
                     />
                   </div>
@@ -373,140 +363,18 @@ const handlePaymentSubmit = async () => {
                     <span className="text-black">${total.toFixed(2)}</span>
                   </div>
                 </div>
-
                 <div className="flex gap-4">
                   <button
                     type="button"
                     onClick={() => setCurrentStep("cart")}
-                    className="flex-1 bg-[#89030f] hover:bg-[#6e020a] text-white py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md"
+                    className="flex-1 bg-[#89030f] hover:bg-[#6e020a] active:scale-95 transition-transform text-white py-3 rounded-lg flex items-center justify-center gap-2 shadow-md"
                   >
                     <ChevronLeft className="h-5 w-5" /> Volver
                   </button>
                   <button
                     type="button"
                     onClick={handleShippingSubmit}
-                    className="flex-1 bg-[#89030f] hover:bg-[#6e020a] text-white py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md"
-                  >
-                    Continuar al Pago <ChevronRight className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* PAGO CON TARJETA */}
-        {currentStep === "payment" && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <div className="flex items-center gap-3 mb-6">
-                  <CreditCard className="h-6 w-6 text-emerald-600" />
-                  <h2 className="text-2xl text-black">Información de Pago</h2>
-                </div>
-
-                {/* Tarjeta de Crédito / Débito - Diseño como la imagen */}
-                <div className="mb-8">
-                  <div className="bg-[#E6F9F0] border border-emerald-500 rounded-2xl p-5 text-center">
-                    <p className="text-xl font-semibold text-black">
-                      Tarjeta de Crédito / Débito
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-5">
-                  <div>
-                    <label className="block text-gray-700 mb-2">Nombre en la Tarjeta *</label>
-                    <input
-                      type="text"
-                      name="cardName"
-                      required
-                      value={paymentData.cardName}
-                      onChange={handlePaymentChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                      placeholder="JUAN PÉREZ"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-gray-700 mb-2">Número de Tarjeta *</label>
-                    <input
-                      type="text"
-                      name="cardNumber"
-                      required
-                      value={paymentData.cardNumber}
-                      onChange={handlePaymentChange}
-                      maxLength={19}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                      placeholder="1234 5678 9012 3456"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-gray-700 mb-2">Fecha de Vencimiento *</label>
-                      <input
-                        type="text"
-                        name="expiryDate"
-                        required
-                        value={paymentData.expiryDate}
-                        onChange={handlePaymentChange}
-                        maxLength={5}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                        placeholder="MM/AA"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-gray-700 mb-2">CVV *</label>
-                      <input
-                        type="text"
-                        name="cvv"
-                        required
-                        value={paymentData.cvv}
-                        onChange={handlePaymentChange}
-                        maxLength={4}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                        placeholder="123"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
-                <h3 className="text-xl mb-4 text-black">Total a Pagar</h3>
-                <div className="space-y-3 mb-6">
-                  <div className="flex justify-between text-gray-700">
-                    <span>Subtotal:</span>
-                    <span>${subtotal.toFixed(2)}</span>
-                  </div>
-                  <div className="border-t pt-3 flex justify-between text-xl font-medium">
-                    <span>Total:</span>
-                    <span className="text-black">${total.toFixed(2)}</span>
-                  </div>
-                </div>
-
-                <div className="bg-emerald-50 p-4 rounded-lg mb-6">
-                  <p className="text-sm text-emerald-800 flex items-center gap-2">
-                    <span className="text-lg">🔒</span> Pago seguro con tarjeta
-                  </p>
-                </div>
-
-                <div className="flex gap-4">
-                  <button
-                    type="button"
-                    onClick={() => setCurrentStep("shipping")}
-                    className="flex-1 bg-[#89030f] hover:bg-[#6e020a] text-white py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md"
-                  >
-                    <ChevronLeft className="h-5 w-5" /> Volver
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handlePaymentSubmit}
-                    className="flex-1 bg-[#89030f] hover:bg-[#6e020a] text-white py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md"
+                    className="flex-1 bg-[#89030f] hover:bg-[#6e020a] active:scale-95 transition-transform text-white py-3 rounded-lg flex items-center justify-center gap-2 shadow-md"
                   >
                     Confirmar Pedido <CheckCircle className="h-5 w-5" />
                   </button>
@@ -516,7 +384,7 @@ const handlePaymentSubmit = async () => {
           </div>
         )}
 
-        {/* CONFIRMACIÓN - Botón "Seguir Comprando" en rojo */}
+        {/* ── CONFIRMACIÓN ── */}
         {currentStep === "confirmation" && confirmedShipping && (
           <div className="max-w-2xl mx-auto">
             <div className="bg-white rounded-2xl shadow-lg p-10 text-center">
@@ -536,15 +404,30 @@ const handlePaymentSubmit = async () => {
                 </p>
               </div>
 
+              {/* DATOS BANCARIOS */}
+              <div className="bg-yellow-50 border border-yellow-300 rounded-xl p-6 mb-8 text-left">
+                <h3 className="font-bold text-lg mb-3 text-yellow-800">
+                  💳 Realiza tu pago por transferencia
+                </h3>
+                <div className="space-y-2 text-gray-700">
+                  <p><span className="font-semibold">Banco:</span> Banco Azteca</p>
+                  <p><span className="font-semibold">Titular:</span> Rosa Iris Rizo Antonio</p>
+                  <p><span className="font-semibold">Número de tarjeta:</span> 5512 3824 2951 5192</p>
+                  <p className="text-xl font-bold text-yellow-800 mt-3">
+                    Monto a depositar: ${orderTotal.toFixed(2)}
+                  </p>
+                </div>
+                <p className="text-sm text-yellow-700 mt-4">
+                  ⚠️ Una vez realizado el depósito, el administrador confirmará tu pago
+                  y procederá con el envío de tu pedido.
+                </p>
+              </div>
+
               <div className="bg-gray-50 rounded-xl p-6 mb-8 text-left">
                 <div className="space-y-4">
                   <div className="flex justify-between text-lg">
-                    <span className="text-gray-600">Total Pagado:</span>
+                    <span className="text-gray-600">Total a Pagar:</span>
                     <span className="font-semibold text-black">${orderTotal.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Método de Pago:</span>
-                    <span className="font-medium text-black">{confirmedPaymentMethod}</span>
                   </div>
                 </div>
               </div>
@@ -553,12 +436,9 @@ const handlePaymentSubmit = async () => {
                 <h3 className="font-semibold text-lg mb-4 text-black">Información de Envío:</h3>
                 <div className="space-y-2 text-gray-700 leading-relaxed">
                   <p className="font-medium">{confirmedShipping.fullName}</p>
-                  <p>{confirmedShipping.address}</p>
-                  <p>
-                    {confirmedShipping.city}, {confirmedShipping.state} {confirmedShipping.postalCode}
-                  </p>
+                  <p>{confirmedShipping.address} #{confirmedShipping.number}, {confirmedShipping.colonia}</p>
+                  <p>{confirmedShipping.city}, {confirmedShipping.state} {confirmedShipping.postalCode}</p>
                   <p>Teléfono: {confirmedShipping.phone}</p>
-                  
                 </div>
               </div>
 
@@ -570,17 +450,16 @@ const handlePaymentSubmit = async () => {
                 con los detalles de tu pedido.
               </p>
 
-              {/* Botones finales */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={handleFinish}
-                  className="flex-1 bg-[#89030f] hover:bg-[#6e020a] text-white py-4 rounded-xl font-medium transition-all shadow-md"
+                  className="flex-1 bg-[#89030f] hover:bg-[#6e020a] active:scale-95 transition-transform text-white py-4 rounded-xl font-medium shadow-md"
                 >
                   Volver al Inicio
                 </button>
                 <button
                   onClick={() => navigate("/productos")}
-                  className="flex-1 bg-[#89030f] hover:bg-[#6e020a] text-white py-4 rounded-xl font-medium transition-all shadow-md"
+                  className="flex-1 bg-[#89030f] hover:bg-[#6e020a] active:scale-95 transition-transform text-white py-4 rounded-xl font-medium shadow-md"
                 >
                   Seguir Comprando
                 </button>

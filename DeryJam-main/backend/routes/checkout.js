@@ -6,10 +6,11 @@ router.post("/", (req, res) => {
   const { userId, shippingData, items, total } = req.body;
 
   // 1. Guardar dirección
+  // 1. Guardar dirección
   db.query(
     `INSERT INTO direccion 
-      (Id_usuario, Calle, Numero, Colonia, Ciudad, Estado, Codigo_postal, Referencias)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    (Id_usuario, Calle, Numero, Colonia, Ciudad, Estado, Codigo_postal, Referencias)
+   VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       userId,
       shippingData.address,
@@ -20,29 +21,29 @@ router.post("/", (req, res) => {
       shippingData.postalCode,
       shippingData.notes || ""
     ],
-    
-(err) => {
-  if (err) {
-    console.log("ERROR DIRECCION:", err); // ← agrega esto
-    return res.status(500).json({ msg: "Error al guardar dirección", err });
-  }
+    (err, dirResult) => {
+      if (err) {
+        console.log("ERROR DIRECCION:", err);
+        return res.status(500).json({ msg: "Error al guardar dirección", err });
+      }
 
-      // 2. Crear la venta
+      const direccionId = dirResult.insertId; // ← capturar el id
+
+      // 2. Crear la venta CON Id_direccion
       db.query(
-        "INSERT INTO venta (Id_usuario, Total, Estado, Fecha) VALUES (?, ?, ?, NOW())",
-        [userId, total, "pendiente"],
+        "INSERT INTO venta (Id_usuario, Id_direccion, Total, Estado, Fecha) VALUES (?, ?, ?, ?, NOW())",
+        [userId, direccionId, total, "pendiente"], // ← incluir direccionId
         (err2, ventaResult) => {
           if (err2) return res.status(500).json({ msg: "Error al crear venta", err2 });
 
           const ventaId = ventaResult.insertId;
 
-          // 3. Insertar detalle_venta por cada producto
           const detalles = items.map((item) => [
             ventaId,
             item.id,
             item.quantity,
             item.price,
-            item.price * item.quantity  // Subtotal
+            item.price * item.quantity
           ]);
 
           db.query(
@@ -51,7 +52,6 @@ router.post("/", (req, res) => {
             (err3) => {
               if (err3) return res.status(500).json({ msg: "Error en detalle_venta", err3 });
 
-              // 4. Limpiar el carrito del usuario
               db.query(
                 "DELETE FROM carrito WHERE Id_usuario = ?",
                 [userId],

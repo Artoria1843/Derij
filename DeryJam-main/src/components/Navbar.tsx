@@ -61,6 +61,13 @@ export function Navbar() {
             </Link>
 
             <Link
+              to="/admin/envios"
+              className="font-semibold text-[#c10a16] hover:text-[#5a0209]"
+            >
+              Envíos
+            </Link>
+
+            <Link
               to="/admin/productos"
               className="font-semibold text-[#c10a16] hover:text-[#5a0209]"
             >

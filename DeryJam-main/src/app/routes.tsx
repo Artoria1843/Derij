@@ -19,6 +19,7 @@ import { AdminPanel } from "./pages/Admin/AdminPanel";
 import { AdminCategories } from "./pages/Admin/AdminCategories";
 import { Usuarios } from "./pages/Admin/Usuarios";
 import { Inventario } from "./pages/Admin/Inventario";
+import { AdminEnvios } from "./pages/Admin/AdminEnvios";
 // Routes protect
 import { AdminRoute } from "./pages/AdminRoute";
 import { ClientRoute } from "./pages/ClientRoute";
@@ -59,6 +60,11 @@ export const router = createBrowserRouter([
         element: <AdminRoute />,
         children: [
           {
+            path: "admin/envios",
+            Component: AdminEnvios,
+          },
+
+          {
             path: "admin",
             Component: AdminPanel,
           },
@@ -75,9 +81,9 @@ export const router = createBrowserRouter([
             Component: Usuarios,
           },
           {
-  path: "admin/inventario",
-  Component: Inventario,
-},
+            path: "admin/inventario",
+            Component: Inventario,
+          },
         ],
       },
     ],

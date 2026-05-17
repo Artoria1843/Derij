@@ -51,7 +51,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         id: row.Id_producto,
         name: row.nombre,
         price: row.precio,
-        image: row.imagen,
+        image: `${API_URL}${row.imagen}`,
         description: row.descripcion,
         quantity: row.Cantidad,
         stock: row.stock_disponible
@@ -99,43 +99,54 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   // ── Eliminar ──
-  const removeFromCart = async (id: number) => {
-    const user = getUser();
-    if (!user) return;
+const removeFromCart = async (id: number) => {
+  const user = getUser();
+  if (!user) return;
 
-    try {
-      await axios.delete(`${API_URL}/carrito/${user.id}/${id}`);
-      setItems((curr) => curr.filter((i) => i.id !== id));
-    } catch (err: any) {
-      alert(err.response?.data?.msg || "Error al eliminar del carrito");
-    }
-  };
+  // Actualizar UI inmediatamente
+  setItems((curr) => curr.filter((i) => i.id !== id));
+
+  try {
+    await axios.delete(`${API_URL}/carrito/${user.id}/${id}`);
+  } catch (err: any) {
+    alert(err.response?.data?.msg || "Error al eliminar del carrito");
+    await loadCart(); // revertir si falla
+  }
+};
 
   // ── Actualizar cantidad (botones + y -) ──
-  const updateQuantity = async (id: number, nuevaCantidad: number) => {
-    const user = getUser();
-    if (!user) return;
+const updateQuantity = async (id: number, nuevaCantidad: number) => {
+  const user = getUser();
+  if (!user) return;
 
-    // Verificar stock disponible antes de aumentar
-    if (nuevaCantidad > 0) {
-      const item = items.find((i) => i.id === id);
-      if (item && nuevaCantidad > item.quantity + item.stock) {
-        alert("No hay suficiente stock disponible.");
-        return;
-      }
+  if (nuevaCantidad > 0) {
+    const item = items.find((i) => i.id === id);
+    if (item && nuevaCantidad > item.quantity + item.stock) {
+      alert("No hay suficiente stock disponible.");
+      return;
     }
+  }
 
-    try {
-      await axios.put(`${API_URL}/carrito`, {
-        userId: user.id,
-        productId: id,
-        nuevaCantidad
-      });
-      await loadCart();
-    } catch (err: any) {
-      alert(err.response?.data?.msg || "Error al actualizar cantidad");
-    }
-  };
+  // Actualizar UI inmediatamente
+  if (nuevaCantidad <= 0) {
+    setItems((curr) => curr.filter((i) => i.id !== id));
+  } else {
+    setItems((curr) =>
+      curr.map((i) => (i.id === id ? { ...i, quantity: nuevaCantidad } : i))
+    );
+  }
+
+  try {
+    await axios.put(`${API_URL}/carrito`, {
+      userId: user.id,
+      productId: id,
+      nuevaCantidad
+    });
+  } catch (err: any) {
+    alert(err.response?.data?.msg || "Error al actualizar cantidad");
+    await loadCart(); // revertir si falla
+  }
+};
 
   const clearCart = () => setItems([]);
 

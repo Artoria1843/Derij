@@ -114,6 +114,22 @@ export function AdminPanel() {
 
       </div>
 
+      {/* ENVÍOS */}
+      <div
+        onClick={() => navigate("/admin/envios")}
+        className="bg-white p-8 rounded-2xl shadow-md cursor-pointer hover:scale-105 hover:shadow-xl transition duration-300 border-t-4 border-purple-700"
+      >
+        <h2 className="text-2xl font-bold mb-3 text-gray-800">
+          Envíos
+        </h2>
+        <p className="text-gray-500 mb-6">
+          Gestionar pedidos y confirmar pagos
+        </p>
+        <div className="text-sm text-purple-700 font-semibold">
+          Ir a gestión →
+        </div>
+      </div>
+
       {/* ================= BOTÓN VOLVER ================= */}
       <div className="text-center mt-14">
 
