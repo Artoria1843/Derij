@@ -303,7 +303,7 @@ export function Home() {
 
           <div className="h-[400px] rounded-lg overflow-hidden">
             <ImageWithFallback
-              src="/src/assets/logo.jpeg"
+              src="/src/assets/logo10.png"
               alt="Historia"
               className="w-full h-full object-cover"
             />
