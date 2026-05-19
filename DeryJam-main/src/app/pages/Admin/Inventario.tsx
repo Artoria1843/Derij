@@ -159,140 +159,141 @@ export function Inventario() {
 
     const gris =
       [245, 245, 245];
-/* =========================
-   HEADER
-========================= */
-doc.setFillColor(120, 0, 0);
 
-doc.rect(
-  0,
-  0,
-  210,
-  36,
-  "F"
-);
+    /* =========================
+       HEADER
+    ========================= */
+    doc.setFillColor(120, 0, 0);
 
-/* =========================
-   LOGO
-========================= */
-doc.addImage(
-  "/logo.jpeg",
-  "JPEG",
-  8,
-  5,
-  20,
-  20
-);
+    doc.rect(
+      0,
+      0,
+      210,
+      36,
+      "F"
+    );
 
-/* =========================
-   TITULO
-========================= */
-doc.setFont(
-  "times",
-  "bold"
-);
+    /* =========================
+       LOGO
+    ========================= */
+    doc.addImage(
+      "/logo.jpeg",
+      "JPEG",
+      8,
+      5,
+      20,
+      20
+    );
 
-doc.setFontSize(15);
+    /* =========================
+       TITULO
+    ========================= */
+    doc.setFont(
+      "times",
+      "bold"
+    );
 
-doc.setTextColor(255);
+    doc.setFontSize(15);
 
-doc.text(
-  "REPORTE DE INVENTARIO",
-  55,
-  15
-);
+    doc.setTextColor(255);
 
-/* =========================
-   SUBTITULO
-========================= */
-doc.setFont(
-  "times",
-  "normal"
-);
+    doc.text(
+      "REPORTE DE INVENTARIO",
+      55,
+      15
+    );
 
-doc.setFontSize(9);
+    /* =========================
+       SUBTITULO
+    ========================= */
+    doc.setFont(
+      "times",
+      "normal"
+    );
 
-doc.text(
-  "Sistema DeryJam",
-  93,
-  23
-);
+    doc.setFontSize(9);
 
-/* =========================
-   LINEAS DECORATIVAS
-========================= */
-doc.setDrawColor(255);
+    doc.text(
+      "Sistema DeryJam",
+      93,
+      23
+    );
 
-doc.setLineWidth(0.5);
+    /* =========================
+       LINEAS DECORATIVAS
+    ========================= */
+    doc.setDrawColor(255);
 
-doc.line(
-  38,
-  21,
-  58,
-  21
-);
+    doc.setLineWidth(0.5);
 
-doc.line(
-  122,
-  21,
-  142,
-  21
-);
+    doc.line(
+      38,
+      21,
+      58,
+      21
+    );
 
-/* =========================
-   PANEL DERECHO
-========================= */
-doc.setFillColor(
-  95,
-  0,
-  0
-);
+    doc.line(
+      122,
+      21,
+      142,
+      21
+    );
 
-doc.roundedRect(
-  148,
-  4,
-  52,
-  24,
-  2,
-  2,
-  "F"
-);
+    /* =========================
+       PANEL DERECHO
+    ========================= */
+    doc.setFillColor(
+      95,
+      0,
+      0
+    );
 
-/* =========================
-   TEXTO PANEL
-========================= */
-doc.setFont(
-  "times",
-  "bold"
-);
+    doc.roundedRect(
+      148,
+      4,
+      52,
+      24,
+      2,
+      2,
+      "F"
+    );
 
-doc.setFontSize(7);
+    /* =========================
+       TEXTO PANEL
+    ========================= */
+    doc.setFont(
+      "times",
+      "bold"
+    );
 
-doc.setTextColor(255);
+    doc.setFontSize(7);
 
-doc.text(
-  `Reporte No.:`,
-  152,
-  10
-);
+    doc.setTextColor(255);
 
-doc.text(
-  reporteNo,
-  152,
-  14
-);
+    doc.text(
+      `Reporte No.:`,
+      152,
+      10
+    );
 
-doc.text(
-  `Fecha: ${fecha}`,
-  152,
-  19
-);
+    doc.text(
+      reporteNo,
+      152,
+      14
+    );
 
-doc.text(
-  `Hora: ${hora}`,
-  152,
-  24
-);
+    doc.text(
+      `Fecha: ${fecha}`,
+      152,
+      19
+    );
+
+    doc.text(
+      `Hora: ${hora}`,
+      152,
+      24
+    );
 
     /* =========================
        RESET COLOR
@@ -560,10 +561,16 @@ doc.text(
     /* =========================
        POSICION FINAL TABLA
     ========================= */
-    const finalY =
+    const tableFinalY =
       (doc as any)
         .lastAutoTable
-        .finalY + 15;
+        .finalY;
+
+    /* =========================
+       NUEVA POSICION
+    ========================= */
+    const finalY =
+      tableFinalY + 12;
 
     /* =========================
        CAJA INFORMACIÓN
@@ -665,8 +672,11 @@ doc.text(
     );
 
     /* =========================
-       FOOTER
+       FOOTER DINÁMICO
     ========================= */
+    const footerY =
+      finalY + 42;
+
     doc.setDrawColor(
       rojo[0],
       rojo[1],
@@ -675,9 +685,9 @@ doc.text(
 
     doc.line(
       10,
-      280,
+      footerY,
       200,
-      280
+      footerY
     );
 
     doc.setFontSize(9);
@@ -687,19 +697,19 @@ doc.text(
     doc.text(
       "Documento generado automáticamente por el Sistema DeryJam.",
       12,
-      286
+      footerY + 8
     );
 
     doc.text(
       "© 2026 DeryJam",
       12,
-      292
+      footerY + 14
     );
 
     doc.text(
       "Página 1 de 1",
       170,
-      292
+      footerY + 14
     );
 
     /* =========================

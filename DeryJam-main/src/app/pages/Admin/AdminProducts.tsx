@@ -642,149 +642,195 @@ export function AdminProducts() {
       )}
 
       {/* ================= MODAL EDITAR ================= */}
-      {editando && (
+     {/* ================= MODAL EDITAR ================= */}
+{editando && (
 
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
+  <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
 
-          <div className="bg-white p-6 rounded-xl w-96">
+    <div className="bg-white p-6 rounded-2xl w-[420px] shadow-2xl">
 
-            <h3 className="text-lg font-bold mb-3">
-              Editar Producto
-            </h3>
+      <h3 className="text-2xl font-bold mb-5 text-center">
+        Editar Producto
+      </h3>
 
-            <input
-              value={editando.nombre}
-              onChange={(e) => {
+      {/* ================= NOMBRE ================= */}
+      <input
+        value={editando.nombre}
+        onChange={(e) => {
 
-                const value =
-                  e.target.value;
+          const value =
+            e.target.value;
 
-                if (
-                  /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/.test(
-                    value
-                  )
-                ) {
+          if (
+            /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/.test(
+              value
+            )
+          ) {
 
-                  setEditando({
-                    ...editando,
-                    nombre: value,
-                  });
-                }
-              }}
-              className="border p-2 mb-2 w-full rounded"
-            />
+            setEditando({
+              ...editando,
+              nombre: value,
+            });
+          }
+        }}
+        placeholder="Nombre"
+        className="border p-3 mb-3 w-full rounded-xl"
+      />
 
-            <input
-              value={editando.precio}
-              onChange={(e) =>
-                setEditando({
-                  ...editando,
-                  precio:
-                    e.target.value,
-                })
-              }
-              className="border p-2 mb-2 w-full rounded"
-            />
+      {/* ================= PRECIO ================= */}
+      <input
+        type="number"
+        value={editando.precio}
+        onChange={(e) =>
+          setEditando({
+            ...editando,
+            precio:
+              e.target.value,
+          })
+        }
+        placeholder="Precio"
+        className="border p-3 mb-3 w-full rounded-xl"
+      />
 
-            <input
-              value={
-                editando.stock || ""
-              }
-              onChange={(e) => {
+      {/* ================= STOCK ================= */}
+      <input
+        type="number"
+        value={
+          editando.stock ?? ""
+        }
+        onChange={(e) => {
 
-                const value =
-                  e.target.value;
+          const value =
+            e.target.value;
 
-                if (
-                  /^\d*$/.test(
-                    value
-                  )
-                ) {
+          setEditando({
+            ...editando,
+            stock:
+              value === ""
+                ? undefined
+                : Number(value),
+          });
 
-                  setEditando({
-                    ...editando,
-                    stock:
-                      Number(
-                        value
-                      ),
-                  });
-                }
-              }}
-              placeholder="Cantidad"
-              className="border p-2 mb-2 w-full rounded"
-            />
+        }}
+        placeholder="Cantidad"
+        className="border p-3 mb-3 w-full rounded-xl"
+      />
 
-            <img
-              src={getImageUrl(
+      {/* ================= DESCRIPCION ================= */}
+      <textarea
+        value={
+          editando.descripcion || ""
+        }
+        onChange={(e) =>
+          setEditando({
+            ...editando,
+            descripcion:
+              e.target.value,
+          })
+        }
+        placeholder="Descripción"
+        className="border p-3 mb-3 w-full rounded-xl"
+      />
+
+      {/* ================= CATEGORIA ================= */}
+      <select
+        value={
+          editando.Id_categoria || ""
+        }
+        onChange={(e) =>
+          setEditando({
+            ...editando,
+            Id_categoria:
+              Number(
+                e.target.value
+              ),
+          })
+        }
+        className="border p-3 mb-3 w-full rounded-xl"
+      >
+
+        <option value="">
+          Categoría
+        </option>
+
+        {categorias.map((c) => (
+
+          <option
+            key={c.Id_categoria}
+            value={c.Id_categoria}
+          >
+            {c.Nombre}
+          </option>
+
+        ))}
+
+      </select>
+
+      {/* ================= IMAGEN ACTUAL ================= */}
+      <img
+        src={
+          editando.preview
+            ? editando.preview
+            : getImageUrl(
                 editando.imagen
-              )}
-              className="w-full h-32 object-cover rounded mb-2"
-            />
+              )
+        }
+        className="w-full h-40 object-cover rounded-xl mb-3 border"
+      />
 
-            <input
-              type="file"
-              onChange={(e) => {
+      {/* ================= NUEVA IMAGEN ================= */}
+      <input
+        type="file"
+        onChange={(e) => {
 
-                const file =
-                  e.target.files?.[0];
+          const file =
+            e.target.files?.[0];
 
-                if (file) {
+          if (file) {
 
-                  setEditando({
-                    ...editando,
-                    imagenFile:
-                      file,
-                    preview:
-                      URL.createObjectURL(
-                        file
-                      ),
-                  });
-                }
-              }}
-            />
+            setEditando({
+              ...editando,
+              imagenFile:
+                file,
+              preview:
+                URL.createObjectURL(
+                  file
+                ),
+            });
+          }
+        }}
+        className="mb-4"
+      />
 
-            {editando.preview && (
+      {/* ================= BOTONES ================= */}
+      <div className="flex gap-3">
 
-              <img
-                src={
-                  editando.preview
-                }
-                className="w-full h-32 object-cover mt-2 rounded"
-              />
-            )}
+        <button
+          onClick={guardarEdicion}
+          className="bg-green-600 hover:bg-green-700 text-white flex-1 p-3 rounded-xl font-semibold"
+        >
 
-            <div className="flex gap-2 mt-4">
+          Guardar Cambios
 
-              <button
-                onClick={
-                  guardarEdicion
-                }
-                className="bg-green-600 text-white flex-1 p-2 rounded"
-              >
+        </button>
 
-                Guardar
+        <button
+          onClick={() =>
+            setEditando(null)
+          }
+          className="bg-gray-200 hover:bg-gray-300 flex-1 p-3 rounded-xl font-semibold"
+        >
 
-              </button>
+          Cancelar
 
-              <button
-                onClick={() =>
-                  setEditando(
-                    null
-                  )
-                }
-                className="flex-1"
-              >
+        </button>
 
-                Cancelar
+      </div>
 
-              </button>
+    </div>
 
-            </div>
-
-          </div>
-
-        </div>
-      )}
+  </div>
+)}
 
     </div>
   );
