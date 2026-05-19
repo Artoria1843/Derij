@@ -211,7 +211,7 @@ export function About() {
             className="transition-all duration-500 hover:scale-105"
 
             style={{
-              backgroundColor: "#E1E3DB",
+              backgroundColor: "#F7F1E1",
               borderRadius: "22px",
               overflow: "hidden",
               boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
