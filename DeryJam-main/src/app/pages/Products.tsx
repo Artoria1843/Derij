@@ -4,7 +4,7 @@ import { Search } from "lucide-react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { useCart } from "../context/CartContext";
 import { toast } from "sonner";
-
+import { ProductModal } from "../components/ProductModal";
 type Product = {
   id: number;
   nombre: string;
@@ -24,7 +24,7 @@ export function Products() {
   const [categories, setCategories] = useState<Categoria[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-
+const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const { addToCart } = useCart();
   const API_URL = "http://localhost:3001";
 
@@ -128,12 +128,13 @@ export function Products() {
       </section>
 
       {/* PRODUCTOS */}
-      {/* PRODUCTOS */}
+   {/* PRODUCTOS */}
 <section className="p-10 grid grid-cols-1 md:grid-cols-3 gap-6">
 
   {filteredProducts.map(product => (
     <div
       key={product.id}
+      onClick={() => setSelectedProduct(product)}
       className="
         bg-white 
         p-4 
@@ -188,6 +189,17 @@ export function Products() {
         </span>
 
         <button
+          onClick={(e) => {
+            e.stopPropagation();
+
+            handleAddToCart({
+              id: product.id,
+              nombre: product.nombre,
+              categoria: product.categoria,
+              precio: product.precio,
+              imagen: product.imagen
+            });
+          }}
           className="
             bg-[#89030F] 
             text-white 
@@ -200,15 +212,6 @@ export function Products() {
             hover:scale-105
             active:scale-95
           "
-          onClick={() =>
-            handleAddToCart({
-              id: product.id,
-              nombre: product.nombre,
-              categoria: product.categoria,
-              precio: product.precio,
-              imagen: product.imagen
-            })
-          }
         >
           Agregar
         </button>
@@ -219,6 +222,14 @@ export function Products() {
   ))}
 
 </section>
+
+{/* MODAL */}
+{selectedProduct && (
+  <ProductModal
+    product={selectedProduct}
+    onClose={() => setSelectedProduct(null)}
+  />
+)}
 
     </div>
   );
