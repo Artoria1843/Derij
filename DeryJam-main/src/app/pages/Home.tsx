@@ -5,11 +5,14 @@ import { Leaf, Heart, Award, Truck } from "lucide-react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { useCart } from "../context/CartContext";
 import { toast } from "sonner";
+import { ProductModal } from "../components/ProductModal";
 
 export function Home() {
+
   const { addToCart } = useCart();
 
   const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
 
   const API_URL = "http://localhost:3001";
 
@@ -20,7 +23,7 @@ export function Home() {
     axios
       .get(`${API_URL}/productos`)
       .then((res) => {
-        setFeaturedProducts(res.data.slice(0, 4)); // solo 4 destacados
+        setFeaturedProducts(res.data.slice(0, 4));
       })
       .catch((err) => console.log("ERROR HOME:", err));
   }, []);
@@ -29,19 +32,14 @@ export function Home() {
   // CARRITO
   // =========================
   const handleAddToCart = (product: any) => {
-            handleAddToCart({
-              id: product.id,
-              nombre: product.nombre,
-              categoria: product.categoria,
-              precio: product.precio,
-              imagen: product.imagen
-            })
+
+    addToCart(product);
 
     toast.success(`${product.nombre} agregado al carrito`);
   };
 
   // =========================
-  // FEATURES (NO CAMBIA)
+  // FEATURES
   // =========================
   const features = [
     {
@@ -72,6 +70,7 @@ export function Home() {
 
       {/* HERO */}
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
+
         <ImageWithFallback
           src="https://vidanayarit.com.mx/wp-content/uploads/2025/08/18_jamaica.png"
           alt="Hero background"
@@ -79,6 +78,7 @@ export function Home() {
         />
 
         <div className="relative z-20 text-center text-white px-4 max-w-4xl">
+
           <h1 className="text-5xl md:text-6xl mb-6 text-white [text-shadow:2px_2px_0px_black,-2px_-2px_0px_black]">
             Productos Naturales y Artesanales
           </h1>
@@ -88,6 +88,7 @@ export function Home() {
           </p>
 
           <div className="flex gap-4 justify-center flex-wrap">
+
             <Link
               to="/productos"
               className="bg-[#89030F] hover:bg-[#6e020a] text-white px-8 py-3 rounded-lg"
@@ -101,186 +102,204 @@ export function Home() {
             >
               Conoce Más
             </Link>
+
           </div>
+
         </div>
       </section>
 
       {/* FEATURES */}
-<section className="py-16 bg-[#F7F1E1]">
-  <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+      <section className="py-16 bg-[#F7F1E1]">
 
-    {features.map((f, i) => (
-      <div
-        key={i}
-        className="
-          text-center
-          transition-all
-          duration-300
-          hover:-translate-y-2
-          hover:scale-105
-          cursor-pointer
-        "
-      >
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
 
-        <f.icon
-          className="
-            h-10
-            w-10
-            mx-auto
-            text-green-700
-            mb-3
-            transition-all
-            duration-300
-            hover:scale-125
-          "
-        />
-
-        <h3 className="text-xl font-bold mb-2">
-          {f.title}
-        </h3>
-
-        <p className="text-base text-gray-600">
-          {f.description}
-        </p>
-
-      </div>
-    ))}
-
-  </div>
-</section>
-      {/* PRODUCTOS BD */}
-      {/* PRODUCTOS BD */}
-<section className="py-16 bg-[#F7F1E1]">
-
-  <div className="text-center mb-14">
-    <h2 className="text-4xl font-bold text-[#89030F]">
-      Productos Destacados
-    </h2>
-
-    <p className="text-gray-600 mt-3 text-lg">
-      Descubre nuestros productos más populares
-    </p>
-  </div>
-
-  <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-
-    {featuredProducts.map((product) => (
-      <div
-        key={product.id}
-        className="
-          bg-white
-          rounded-2xl
-          shadow-md
-          overflow-hidden
-          transition-all
-          duration-300
-          hover:shadow-2xl
-          hover:-translate-y-3
-          hover:scale-105
-          group
-          cursor-pointer
-        "
-      >
-
-        {/* IMAGEN */}
-        <div className="aspect-square overflow-hidden">
-          <ImageWithFallback
-            src={
-              product.imagen?.startsWith("http")
-                ? product.imagen
-                : `${API_URL}${product.imagen}`
-            }
-            alt={product.nombre}
-            className="
-              w-full
-              h-full
-              object-cover
-              transition-transform
-              duration-500
-              group-hover:scale-110
-            "
-          />
-        </div>
-
-        {/* INFO */}
-        <div className="p-5">
-
-          <h3 className="
-            mb-3
-            text-xl
-            font-bold
-            text-[#89030F]
-            transition-colors
-            duration-300
-          ">
-            {product.nombre}
-          </h3>
-
-          <p className="text-gray-600 text-base mb-4 line-clamp-3">
-            {product.descripcion}
-          </p>
-
-          <div className="flex justify-between items-center">
-
-            <span className="text-[#89030F] text-2xl font-bold">
-              ${product.precio}
-            </span>
-
-            <button
-              onClick={() => handleAddToCart(product)}
+          {features.map((f, i) => (
+            <div
+              key={i}
               className="
-                bg-[#89030F]
-                hover:bg-[#6e020a]
-                text-white
-                px-5
-                py-2
-                rounded-lg
-                text-sm
+                text-center
                 transition-all
                 duration-300
+                hover:-translate-y-2
                 hover:scale-105
-                active:scale-95
+                cursor-pointer
               "
             >
-              Agregar
-            </button>
 
-          </div>
+              <f.icon
+                className="
+                  h-10
+                  w-10
+                  mx-auto
+                  text-green-700
+                  mb-3
+                  transition-all
+                  duration-300
+                  hover:scale-125
+                "
+              />
+
+              <h3 className="text-xl font-bold mb-2">
+                {f.title}
+              </h3>
+
+              <p className="text-base text-gray-600">
+                {f.description}
+              </p>
+
+            </div>
+          ))}
 
         </div>
-      </div>
-    ))}
+      </section>
 
-  </div>
+      {/* PRODUCTOS */}
+      <section className="py-16 bg-[#F7F1E1]">
 
-  <div className="text-center mt-14">
-    <Link
-      to="/productos"
-      className="
-        bg-[#89030F]
-        hover:bg-[#6e020a]
-        text-white
-        px-10
-        py-4
-        rounded-xl
-        transition-all
-        duration-300
-        hover:scale-105
-        inline-block
-        text-lg
-      "
-    >
-      Ver Todos los Productos
-    </Link>
-  </div>
+        <div className="text-center mb-14">
 
-</section>
+          <h2 className="text-4xl font-bold text-[#89030F]">
+            Productos Destacados
+          </h2>
+
+          <p className="text-gray-600 mt-3 text-lg">
+            Descubre nuestros productos más populares
+          </p>
+
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+          {featuredProducts.map((product) => (
+            <div
+              key={product.id}
+              onClick={() => setSelectedProduct(product)}
+              className="
+                bg-white
+                rounded-2xl
+                shadow-md
+                overflow-hidden
+                transition-all
+                duration-300
+                hover:shadow-2xl
+                hover:-translate-y-3
+                hover:scale-105
+                group
+                cursor-pointer
+              "
+            >
+
+              {/* IMAGEN */}
+              <div className="aspect-square overflow-hidden">
+
+                <ImageWithFallback
+                  src={
+                    product.imagen?.startsWith("http")
+                      ? product.imagen
+                      : `${API_URL}${product.imagen}`
+                  }
+                  alt={product.nombre}
+                  className="
+                    w-full
+                    h-full
+                    object-cover
+                    transition-transform
+                    duration-500
+                    group-hover:scale-110
+                  "
+                />
+
+              </div>
+
+              {/* INFO */}
+              <div className="p-5">
+
+                <h3
+                  className="
+                    mb-3
+                    text-xl
+                    font-bold
+                    text-[#89030F]
+                    transition-colors
+                    duration-300
+                  "
+                >
+                  {product.nombre}
+                </h3>
+
+                <p className="text-gray-600 text-base mb-4 line-clamp-3">
+                  {product.descripcion}
+                </p>
+
+                <div className="flex justify-between items-center">
+
+                  <span className="text-[#89030F] text-2xl font-bold">
+                    ${product.precio}
+                  </span>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(product);
+                    }}
+                    className="
+                      bg-[#89030F]
+                      hover:bg-[#6e020a]
+                      text-white
+                      px-5
+                      py-2
+                      rounded-lg
+                      text-sm
+                      transition-all
+                      duration-300
+                      hover:scale-105
+                      active:scale-95
+                    "
+                  >
+                    Agregar
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+          ))}
+
+        </div>
+
+        <div className="text-center mt-14">
+
+          <Link
+            to="/productos"
+            className="
+              bg-[#89030F]
+              hover:bg-[#6e020a]
+              text-white
+              px-10
+              py-4
+              rounded-xl
+              transition-all
+              duration-300
+              hover:scale-105
+              inline-block
+              text-lg
+            "
+          >
+            Ver Todos los Productos
+          </Link>
+
+        </div>
+
+      </section>
 
       {/* ABOUT */}
       <section className="py-16 bg-[#F7F1E1]">
+
         <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center">
 
           <div>
+
             <h2 className="text-3xl text-[#89030F] mb-6">
               Nuestra Historia
             </h2>
@@ -299,18 +318,29 @@ export function Home() {
             >
               Conoce Más
             </Link>
+
           </div>
 
           <div className="h-[400px] rounded-lg overflow-hidden">
+
             <ImageWithFallback
               src="/src/assets/logo10.png"
               alt="Historia"
               className="w-full h-full object-cover"
             />
+
           </div>
 
         </div>
       </section>
+
+      {/* MODAL */}
+      {selectedProduct && (
+        <ProductModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
 
     </div>
   );
