@@ -22,7 +22,7 @@ type Venta = {
 
 export function AdminEnvios() {
     const navigate = useNavigate();
-    const API_URL = "http://localhost:3001";
+    const API_URL = "http://https://derij.onrender.com";
     const [ventas, setVentas] = useState<Venta[]>([]);
     const [filtro, setFiltro] = useState<"pendiente" | "entregado">("pendiente");
 

@@ -11,7 +11,7 @@ function App() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/usuarios")
+    fetch("http://https://derij.onrender.com/usuarios")
         .then(res => res.json())
         .then((data) => {
         console.log("DATOS:", data); // 👈 IMPORTANTE

@@ -29,7 +29,7 @@ type ProductoEditando = Producto & {
 ========================= */
 export function AdminProducts() {
 
-  const API_URL = "http://localhost:3001";
+  const API_URL = "http://https://derij.onrender.com";
 
   const [vista, setVista] = useState<
     "menu" | "agregar" | "editar" | "eliminar"

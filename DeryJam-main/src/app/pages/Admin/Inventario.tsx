@@ -33,7 +33,7 @@ export function Inventario() {
      API
   ========================= */
   const API_URL =
-    "http://localhost:3001";
+    "http://https://derij.onrender.com";
 
   /* =========================
      CARGAR PRODUCTOS

@@ -23,7 +23,7 @@ export function AdminCategories() {
     try {
 
       const res = await axios.get(
-        "http://localhost:3001/categorias"
+        "http://https://derij.onrender.com/categorias"
       );
 
       setCategorias(
@@ -58,7 +58,7 @@ export function AdminCategories() {
     try {
 
       await axios.post(
-        "http://localhost:3001/categorias",
+        "http://https://derij.onrender.com/categorias",
         {
           nombre,
         },
@@ -96,7 +96,7 @@ export function AdminCategories() {
     try {
 
       await axios.delete(
-        `http://localhost:3001/categorias/${id}`,
+        `http://https://derij.onrender.com/categorias/${id}`,
         {
           headers: {
             rol: user.rol,
