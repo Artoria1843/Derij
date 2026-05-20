@@ -6,7 +6,7 @@ import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { useCart } from "../context/CartContext";
 import { toast } from "sonner";
 import { ProductModal } from "../components/ProductModal";
-import logoImg from "../assets/logo10.png";
+import logoImg from "../../assets/logo10.png";
 
 export function Home() {
 

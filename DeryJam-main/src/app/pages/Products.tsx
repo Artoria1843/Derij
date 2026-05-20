@@ -5,7 +5,7 @@ import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { useCart } from "../context/CartContext";
 import { toast } from "sonner";
 import { ProductModal } from "../components/ProductModal";
-import jamaicaImg from "../assets/JAMAICA.jpeg";
+import jamaicaImg from "../../assets/JAMAICA.jpeg";
 
 type Product = {
   id: number;
