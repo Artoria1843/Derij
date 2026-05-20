@@ -5,13 +5,15 @@ import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { useCart } from "../context/CartContext";
 import { toast } from "sonner";
 import { ProductModal } from "../components/ProductModal";
+import jamaicaImg from "../assets/JAMAICA.jpeg";
+
 type Product = {
   id: number;
   nombre: string;
   categoria: string;
   precio: number;
   imagen: string;
-  descripcion: string; //  NUEVO
+  descripcion: string;
 };
 
 type Categoria = {
@@ -24,7 +26,7 @@ export function Products() {
   const [categories, setCategories] = useState<Categoria[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const { addToCart } = useCart();
   const API_URL = "https://derij.onrender.com";
 
@@ -72,7 +74,7 @@ const [selectedProduct, setSelectedProduct] = useState<any>(null);
       {/* HEADER */}
       <section className="relative w-full h-[300px] overflow-hidden">
         <ImageWithFallback
-          src="/src/assets/JAMAICA.jpeg"
+          src={jamaicaImg}
           alt="Productos Jamaica"
           className="absolute w-full h-full object-cover"
         />
@@ -128,108 +130,106 @@ const [selectedProduct, setSelectedProduct] = useState<any>(null);
       </section>
 
       {/* PRODUCTOS */}
-   {/* PRODUCTOS */}
-<section className="p-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section className="p-10 grid grid-cols-1 md:grid-cols-3 gap-6">
 
-  {filteredProducts.map(product => (
-    <div
-      key={product.id}
-      onClick={() => setSelectedProduct(product)}
-      className="
-        bg-white 
-        p-4 
-        rounded-2xl 
-        shadow-md 
-        overflow-hidden
-        transition-all 
-        duration-300 
-        hover:scale-105 
-        hover:shadow-2xl 
-        hover:-translate-y-2
-        cursor-pointer
-        group
-      "
-    >
+        {filteredProducts.map(product => (
+          <div
+            key={product.id}
+            onClick={() => setSelectedProduct(product)}
+            className="
+              bg-white 
+              p-4 
+              rounded-2xl 
+              shadow-md 
+              overflow-hidden
+              transition-all 
+              duration-300 
+              hover:scale-105 
+              hover:shadow-2xl 
+              hover:-translate-y-2
+              cursor-pointer
+              group
+            "
+          >
 
-      {/* IMAGEN */}
-      <div className="overflow-hidden rounded-xl">
-        <ImageWithFallback
-          src={
-            product.imagen
-              ? `${API_URL}${product.imagen}`
-              : "https://via.placeholder.com/300"
-          }
-          alt={product.nombre}
-          className="
-            w-full 
-            h-40 
-            object-cover 
-            transition-transform 
-            duration-500 
-            group-hover:scale-110
-          "
+            {/* IMAGEN */}
+            <div className="overflow-hidden rounded-xl">
+              <ImageWithFallback
+                src={
+                  product.imagen
+                    ? `${API_URL}${product.imagen}`
+                    : "https://via.placeholder.com/300"
+                }
+                alt={product.nombre}
+                className="
+                  w-full 
+                  h-40 
+                  object-cover 
+                  transition-transform 
+                  duration-500 
+                  group-hover:scale-110
+                "
+              />
+            </div>
+
+            {/* NOMBRE */}
+            <h3 className="mt-4 font-bold text-lg transition-colors duration-300 group-hover:text-[#89030F]">
+              {product.nombre}
+            </h3>
+
+            {/* DESCRIPCIÓN */}
+            <p className="text-sm text-gray-600 mt-1 line-clamp-3">
+              {product.descripcion}
+            </p>
+
+            {/* PRECIO + BOTÓN */}
+            <div className="flex justify-between items-center mt-4">
+
+              <span className="font-bold text-[#89030F] text-lg">
+                ${product.precio}
+              </span>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddToCart({
+                    id: product.id,
+                    nombre: product.nombre,
+                    categoria: product.categoria,
+                    precio: product.precio,
+                    imagen: product.imagen
+                  });
+                }}
+                className="
+                  bg-[#89030F] 
+                  text-white 
+                  px-4 
+                  py-2 
+                  rounded-lg
+                  transition-all
+                  duration-300
+                  hover:bg-[#5e0008]
+                  hover:scale-105
+                  active:scale-95
+                "
+              >
+                Agregar
+              </button>
+
+            </div>
+
+          </div>
+        ))}
+
+      </section>
+
+      {/* MODAL */}
+      {selectedProduct && (
+        <ProductModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
         />
-      </div>
-
-      {/* NOMBRE */}
-      <h3 className="mt-4 font-bold text-lg transition-colors duration-300 group-hover:text-[#89030F]">
-        {product.nombre}
-      </h3>
-
-      {/* DESCRIPCIÓN */}
-      <p className="text-sm text-gray-600 mt-1 line-clamp-3">
-        {product.descripcion}
-      </p>
-
-      {/* PRECIO + BOTÓN */}
-      <div className="flex justify-between items-center mt-4">
-
-        <span className="font-bold text-[#89030F] text-lg">
-          ${product.precio}
-        </span>
-
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-
-            handleAddToCart({
-              id: product.id,
-              nombre: product.nombre,
-              categoria: product.categoria,
-              precio: product.precio,
-              imagen: product.imagen
-            });
-          }}
-          className="
-            bg-[#89030F] 
-            text-white 
-            px-4 
-            py-2 
-            rounded-lg
-            transition-all
-            duration-300
-            hover:bg-[#5e0008]
-            hover:scale-105
-            active:scale-95
-          "
-        >
-          Agregar
-        </button>
-
-      </div>
-
-    </div>
-  ))}
-
-</section>
-
-{/* MODAL */}
-{selectedProduct && (
-  <ProductModal
-    product={selectedProduct}
-    onClose={() => setSelectedProduct(null)}
-  />
-)}
+      )}
 
     </div>
   );

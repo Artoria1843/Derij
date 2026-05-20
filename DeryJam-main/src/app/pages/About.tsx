@@ -1,5 +1,8 @@
 import { Leaf } from "lucide-react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import jamaicaImg from "../assets/JAMAICA.jpeg";
+import bannerImg from "../assets/BANNER.jpg";
+import beneficiosImg from "../assets/BENEFICIOS.jpg";
 
 export function About() {
 
@@ -38,7 +41,7 @@ export function About() {
       <div className="relative w-full h-[260px] md:h-[360px] overflow-hidden mb-24">
 
         <img
-          src="/src/assets/JAMAICA.jpeg"
+          src={jamaicaImg}
           alt="Banner Jamaica"
           className="w-full h-full object-cover"
         />
@@ -107,7 +110,7 @@ export function About() {
           >
 
             <ImageWithFallback
-              src="/src/assets/BANNER.jpg"
+              src={bannerImg}
               alt="Historia de la Jamaica"
               className="w-full h-full object-cover"
             />
@@ -297,7 +300,7 @@ export function About() {
           >
 
             <ImageWithFallback
-              src="/src/assets/BENEFICIOS.jpg"
+              src={beneficiosImg}
               alt="Beneficios de la Jamaica"
               className="w-full h-full object-cover"
             />

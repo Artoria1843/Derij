@@ -6,6 +6,7 @@ import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { useCart } from "../context/CartContext";
 import { toast } from "sonner";
 import { ProductModal } from "../components/ProductModal";
+import logoImg from "../assets/logo10.png";
 
 export function Home() {
 
@@ -16,9 +17,6 @@ export function Home() {
 
   const API_URL = "https://derij.onrender.com";
 
-  // =========================
-  // CARGAR PRODUCTOS BD
-  // =========================
   useEffect(() => {
     axios
       .get(`${API_URL}/productos`)
@@ -28,25 +26,16 @@ export function Home() {
       .catch((err) => console.log("ERROR HOME:", err));
   }, []);
 
-  // =========================
-  // CARRITO
-  // =========================
   const handleAddToCart = (product: any) => {
-
     addToCart(product);
-
     toast.success(`${product.nombre} agregado al carrito`);
   };
 
-  // =========================
-  // FEATURES
-  // =========================
   const features = [
     {
       icon: Leaf,
       title: "100% Natural",
-      description:
-        "Productos orgánicos sin químicos ni conservadores artificiales",
+      description: "Productos orgánicos sin químicos ni conservadores artificiales",
     },
     {
       icon: Heart,
@@ -88,21 +77,12 @@ export function Home() {
           </p>
 
           <div className="flex gap-4 justify-center flex-wrap">
-
-            <Link
-              to="/productos"
-              className="bg-[#89030F] hover:bg-[#6e020a] text-white px-8 py-3 rounded-lg"
-            >
+            <Link to="/productos" className="bg-[#89030F] hover:bg-[#6e020a] text-white px-8 py-3 rounded-lg">
               Ver Productos
             </Link>
-
-            <Link
-              to="/nosotros"
-              className="bg-[#89030F] hover:bg-[#6e020a] text-white px-8 py-3 rounded-lg"
-            >
+            <Link to="/nosotros" className="bg-[#89030F] hover:bg-[#6e020a] text-white px-8 py-3 rounded-lg">
               Conoce Más
             </Link>
-
           </div>
 
         </div>
@@ -116,37 +96,11 @@ export function Home() {
           {features.map((f, i) => (
             <div
               key={i}
-              className="
-                text-center
-                transition-all
-                duration-300
-                hover:-translate-y-2
-                hover:scale-105
-                cursor-pointer
-              "
+              className="text-center transition-all duration-300 hover:-translate-y-2 hover:scale-105 cursor-pointer"
             >
-
-              <f.icon
-                className="
-                  h-10
-                  w-10
-                  mx-auto
-                  text-green-700
-                  mb-3
-                  transition-all
-                  duration-300
-                  hover:scale-125
-                "
-              />
-
-              <h3 className="text-xl font-bold mb-2">
-                {f.title}
-              </h3>
-
-              <p className="text-base text-gray-600">
-                {f.description}
-              </p>
-
+              <f.icon className="h-10 w-10 mx-auto text-green-700 mb-3 transition-all duration-300 hover:scale-125" />
+              <h3 className="text-xl font-bold mb-2">{f.title}</h3>
+              <p className="text-base text-gray-600">{f.description}</p>
             </div>
           ))}
 
@@ -157,15 +111,8 @@ export function Home() {
       <section className="py-16 bg-[#F7F1E1]">
 
         <div className="text-center mb-14">
-
-          <h2 className="text-4xl font-bold text-[#89030F]">
-            Productos Destacados
-          </h2>
-
-          <p className="text-gray-600 mt-3 text-lg">
-            Descubre nuestros productos más populares
-          </p>
-
+          <h2 className="text-4xl font-bold text-[#89030F]">Productos Destacados</h2>
+          <p className="text-gray-600 mt-3 text-lg">Descubre nuestros productos más populares</p>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -175,23 +122,14 @@ export function Home() {
               key={product.id}
               onClick={() => setSelectedProduct(product)}
               className="
-                bg-white
-                rounded-2xl
-                shadow-md
-                overflow-hidden
-                transition-all
-                duration-300
-                hover:shadow-2xl
-                hover:-translate-y-3
-                hover:scale-105
-                group
-                cursor-pointer
+                bg-white rounded-2xl shadow-md overflow-hidden
+                transition-all duration-300
+                hover:shadow-2xl hover:-translate-y-3 hover:scale-105
+                group cursor-pointer
               "
             >
 
-              {/* IMAGEN */}
               <div className="aspect-square overflow-hidden">
-
                 <ImageWithFallback
                   src={
                     product.imagen?.startsWith("http")
@@ -199,68 +137,35 @@ export function Home() {
                       : `${API_URL}${product.imagen}`
                   }
                   alt={product.nombre}
-                  className="
-                    w-full
-                    h-full
-                    object-cover
-                    transition-transform
-                    duration-500
-                    group-hover:scale-110
-                  "
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-
               </div>
 
-              {/* INFO */}
               <div className="p-5">
-
-                <h3
-                  className="
-                    mb-3
-                    text-xl
-                    font-bold
-                    text-[#89030F]
-                    transition-colors
-                    duration-300
-                  "
-                >
+                <h3 className="mb-3 text-xl font-bold text-[#89030F] transition-colors duration-300">
                   {product.nombre}
                 </h3>
-
                 <p className="text-gray-600 text-base mb-4 line-clamp-3">
                   {product.descripcion}
                 </p>
-
                 <div className="flex justify-between items-center">
-
                   <span className="text-[#89030F] text-2xl font-bold">
                     ${product.precio}
                   </span>
-
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddToCart(product);
                     }}
                     className="
-                      bg-[#89030F]
-                      hover:bg-[#6e020a]
-                      text-white
-                      px-5
-                      py-2
-                      rounded-lg
-                      text-sm
-                      transition-all
-                      duration-300
-                      hover:scale-105
-                      active:scale-95
+                      bg-[#89030F] hover:bg-[#6e020a] text-white
+                      px-5 py-2 rounded-lg text-sm
+                      transition-all duration-300 hover:scale-105 active:scale-95
                     "
                   >
                     Agregar
                   </button>
-
                 </div>
-
               </div>
 
             </div>
@@ -269,26 +174,12 @@ export function Home() {
         </div>
 
         <div className="text-center mt-14">
-
           <Link
             to="/productos"
-            className="
-              bg-[#89030F]
-              hover:bg-[#6e020a]
-              text-white
-              px-10
-              py-4
-              rounded-xl
-              transition-all
-              duration-300
-              hover:scale-105
-              inline-block
-              text-lg
-            "
+            className="bg-[#89030F] hover:bg-[#6e020a] text-white px-10 py-4 rounded-xl transition-all duration-300 hover:scale-105 inline-block text-lg"
           >
             Ver Todos los Productos
           </Link>
-
         </div>
 
       </section>
@@ -299,36 +190,20 @@ export function Home() {
         <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center">
 
           <div>
-
-            <h2 className="text-3xl text-[#89030F] mb-6">
-              Nuestra Historia
-            </h2>
-
-            <p className="mb-4">
-              En deryjam nos dedicamos a producir productos naturales de calidad.
-            </p>
-
-            <p className="mb-6">
-              Trabajamos con productores locales para ofrecer lo mejor.
-            </p>
-
-            <Link
-              to="/nosotros"
-              className="bg-[#89030F] text-white px-8 py-3 rounded-lg"
-            >
+            <h2 className="text-3xl text-[#89030F] mb-6">Nuestra Historia</h2>
+            <p className="mb-4">En deryjam nos dedicamos a producir productos naturales de calidad.</p>
+            <p className="mb-6">Trabajamos con productores locales para ofrecer lo mejor.</p>
+            <Link to="/nosotros" className="bg-[#89030F] text-white px-8 py-3 rounded-lg">
               Conoce Más
             </Link>
-
           </div>
 
           <div className="h-[400px] rounded-lg overflow-hidden">
-
             <ImageWithFallback
-              src="/src/assets/logo10.png"
+              src={logoImg}
               alt="Historia"
               className="w-full h-full object-cover"
             />
-
           </div>
 
         </div>
