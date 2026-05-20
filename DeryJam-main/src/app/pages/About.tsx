@@ -1,7 +1,7 @@
 import { Leaf } from "lucide-react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-import jamaicaImg from "../assets/JAMAICA.jpeg";
-import bannerImg from "../assets/BANNER.jpg";
+import jamaicaImg from "../../assets/JAMAICA.jpeg";
+import bannerImg from "../../assets/BANNER.jpg";
 import beneficiosImg from "../../assets/BENEFICIOS.jpg";
 
 export function About() {
