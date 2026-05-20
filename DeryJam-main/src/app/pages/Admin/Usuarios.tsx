@@ -18,7 +18,9 @@ export function Usuarios() {
     useState(true);
 
   const API_URL =
-    "http://https://derij.onrender.com";
+    "
+https://derij.onrender.com
+";
 
   const user = JSON.parse(
     localStorage.getItem("user") || "{}"

@@ -26,7 +26,7 @@ export function Products() {
   const [searchTerm, setSearchTerm] = useState("");
 const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const { addToCart } = useCart();
-  const API_URL = "http://https://derij.onrender.com";
+  const API_URL = "https://derij.onrender.com";
 
   /* =========================
         PRODUCTOS

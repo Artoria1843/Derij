@@ -31,7 +31,9 @@ export function Login() {
     }
 
     try {
-      const res = await fetch("http://https://derij.onrender.com/login", {
+      const res = await fetch("
+https://derij.onrender.com
+/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

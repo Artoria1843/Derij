@@ -31,7 +31,9 @@ export function ProductModal({
           <div className="bg-gray-100 flex items-center justify-center p-6">
 
             <img
-              src={`http://https://derij.onrender.com${product.imagen}`}
+              src={`
+https://derij.onrender.com
+${product.imagen}`}
               alt={product.nombre}
               className="w-full max-h-[500px] object-contain rounded-xl"
             />

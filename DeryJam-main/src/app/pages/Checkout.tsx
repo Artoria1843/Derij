@@ -61,7 +61,9 @@ export function Checkout() {
     }
 
     try {
-      const res = await axios.post("http://https://derij.onrender.com/checkout", {
+      const res = await axios.post("
+https://derij.onrender.com
+/checkout", {
         userId: user.id,
         shippingData,
         items: items.map((i) => ({
