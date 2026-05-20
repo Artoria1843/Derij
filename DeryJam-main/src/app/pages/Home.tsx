@@ -14,7 +14,7 @@ export function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
 
-  const API_URL = "http://localhost:3001";
+  const API_URL = "https://derij.onrender.com";
 
   // =========================
   // CARGAR PRODUCTOS BD
