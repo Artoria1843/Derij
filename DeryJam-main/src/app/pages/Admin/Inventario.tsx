@@ -32,11 +32,7 @@ export function Inventario() {
   /* =========================
      API
   ========================= */
-  const API_URL =
-    "
-https://derij.onrender.com
-";
-
+  const API_URL = "https://derij.onrender.com";
   /* =========================
      CARGAR PRODUCTOS
   ========================= */

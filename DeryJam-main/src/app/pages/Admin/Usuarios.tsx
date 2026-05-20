@@ -16,12 +16,7 @@ export function Usuarios() {
 
   const [loading, setLoading] =
     useState(true);
-
-  const API_URL =
-    "
-https://derij.onrender.com
-";
-
+const API_URL = "https://derij.onrender.com";
   const user = JSON.parse(
     localStorage.getItem("user") || "{}"
   );
