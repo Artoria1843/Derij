@@ -29,10 +29,7 @@ interface CartContextType {
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
-const API_URL = "
-https://derij.onrender.com
-";
-
+const API_URL = "https://derij.onrender.com";
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
 
